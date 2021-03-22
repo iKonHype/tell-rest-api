@@ -14,6 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
+const authRoute = require("./routes/auth.route");
+
+app.use("/api/auth", authRoute);
+
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
