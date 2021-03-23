@@ -16,7 +16,7 @@ app.use(cors());
 
 const authRoute = require("./routes/auth.route");
 
-app.use("/api/authn", authRoute);
+app.use("/api/auth", authRoute);
 
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {
