@@ -1,3 +1,7 @@
+/**
+ * @module helpers/fileStorageEngine
+ */
+
 const path = require("path");
 const crypto = require("crypto");
 const GridFS = require("multer-gridfs-storage");

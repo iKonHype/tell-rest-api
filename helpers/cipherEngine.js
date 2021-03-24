@@ -1,3 +1,7 @@
+/**
+ * @module helpers/cipherEngine
+ */
+
 const crypto = require("crypto");
 
 const iv = Buffer.allocUnsafe(16);

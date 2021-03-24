@@ -1,3 +1,7 @@
+/**
+ * @module helpers/generateOTP
+ */
+
 const generateOTP = () => {
   var digits = "0123456789";
   let OTP = "";

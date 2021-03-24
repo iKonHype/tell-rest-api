@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/AuthService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/AuthService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @module service/auth
  * @requires module:helpers/cipherEngine
  * @requires module:helpers/JWTEngine
@@ -14,6 +42,11 @@ const {
   verifyJWT,
   verifyRefreshJWT,
 } = require("../helpers/JWTEngine");
+
+/**
+ * 
+ * @namespace
+ */
 
 /**
  * @description Sent verification mail on sign-up
@@ -58,7 +91,7 @@ exports.signup = async (payload) => {
 exports.activate = async (payload) => {
   const { signupToken } = payload;
 
-  const verifyRes = verifyJWT(signupToken); // <- decode signup token
+  const verifyRes = verifyJWT(signupToken); // &lt;- decode signup token
   if (!verifyRes.success)
     return { result: verifyRes.result, success: verifyRes.success };
   const { firstName, lastName, username, email, password } = verifyRes.result;
@@ -77,12 +110,12 @@ exports.activate = async (payload) => {
     if (!newUser) throw new Error("Couldn't save user to database");
     const { _id, role } = newUser;
 
-    const signedRes = signJWT({ id: _id }); // <- Create the sign token
+    const signedRes = signJWT({ id: _id }); // &lt;- Create the sign token
     if (!signedRes.success)
       return { result: signedRes.result, success: signedRes.success };
     const signToken = signedRes.result;
 
-    const refreshRes = refreshJWT({ id: _id }); // <- Create the refresh token
+    const refreshRes = refreshJWT({ id: _id }); // &lt;- Create the refresh token
     if (!refreshRes.success)
       return { result: refreshRes.result, success: refreshRes.success };
     const refToken = refreshRes.result;
@@ -116,12 +149,12 @@ exports.signin = async (payload) => {
     if (!user) throw new Error("Email is not valid or not a registered user");
     if (!user.authenticate(password)) throw new Error("Password is not valid");
 
-    const signedRes = signJWT({ id: user._id }); // <- Create the sign token
+    const signedRes = signJWT({ id: user._id }); // &lt;- Create the sign token
     if (!signedRes.success)
       return { result: signedRes.result, success: signedRes.success };
     const signToken = signedRes.result;
 
-    const refreshRes = refreshJWT({ id: user._id }); // <- Create the refresh token
+    const refreshRes = refreshJWT({ id: user._id }); // &lt;- Create the refresh token
     if (!refreshRes.success)
       return { result: refreshRes.result, success: refreshRes.success };
     const refToken = refreshRes.result;
@@ -147,20 +180,43 @@ exports.signin = async (payload) => {
 exports.refresh = (payload) => {
   const { refreshToken } = payload;
 
-  const verifyRef = verifyRefreshJWT(refreshToken); // <- decode signup token
+  const verifyRef = verifyRefreshJWT(refreshToken); // &lt;- decode signup token
   if (!verifyRef.success)
     return { result: verifyRef.result, success: verifyRef.success };
   const id = verifyRef.result.id;
 
-  const signedRes = signJWT({ id }); // <- Create the sign token
+  const signedRes = signJWT({ id }); // &lt;- Create the sign token
   if (!signedRes.success)
     return { result: signedRes.result, success: signedRes.success };
   const signToken = signedRes.result;
 
-  const refreshRes = refreshJWT({ id }); // <- Create the refresh token
+  const refreshRes = refreshJWT({ id }); // &lt;- Create the refresh token
   if (!refreshRes.success)
     return { result: refreshRes.result, success: refreshRes.success };
   const refToken = refreshRes.result;
 
   return { result: { signToken, refToken, id }, success: true };
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_cipherEngine.html">helpers/cipherEngine</a></li><li><a href="module-helpers_fileStorageEngine.html">helpers/fileStorageEngine</a></li><li><a href="module-helpers_generateOTP.html">helpers/generateOTP</a></li><li><a href="module-helpers_JWTEngine.html">helpers/JWTEngine</a></li><li><a href="module-model_complaint.html">model/complaint</a></li><li><a href="module-model_user.html">model/user</a></li><li><a href="module-service_auth.html">service/auth</a></li><li><a href="module-service_complaint.html">service/complaint</a></li></ul><h3>Global</h3><ul><li><a href="global.html#sendVerificationMail">sendVerificationMail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 24 2021 22:18:53 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
