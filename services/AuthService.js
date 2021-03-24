@@ -14,7 +14,7 @@ const {
  * @param {Object} payload HTTP request body
  * @async
  */
-const signup = async (payload) => {
+exports.signup = async (payload) => {
   const { firstName, lastName, username, email, password } = payload;
 
   // encode user input in a jwt
@@ -47,7 +47,7 @@ const signup = async (payload) => {
  * @param {Object} payload HTTP request body
  * @async
  */
-const activate = async (payload) => {
+exports.activate = async (payload) => {
   const { signupToken } = payload;
 
   const verifyRes = verifyJWT(signupToken); // <- decode signup token
@@ -98,7 +98,7 @@ const activate = async (payload) => {
  * @param {Object} payload HTTP request body
  * @async
  */
-const signin = async (payload) => {
+exports.signin = async (payload) => {
   const { email, password } = payload;
 
   try {
@@ -134,7 +134,7 @@ const signin = async (payload) => {
  * @description Refresh sign token
  * @param {Object} payload HTTP request body
  */
-const refresh = (payload) => {
+exports.refresh = (payload) => {
   const { refreshToken } = payload;
 
   const verifyRef = verifyRefreshJWT(refreshToken); // <- decode signup token
@@ -153,11 +153,4 @@ const refresh = (payload) => {
   const refToken = refreshRes.result;
 
   return { result: { signToken, refToken, id }, success: true };
-};
-
-module.exports = {
-  signup,
-  activate,
-  signin,
-  refresh,
 };
