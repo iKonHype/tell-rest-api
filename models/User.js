@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema(
     birthdate: {
       type: Date,
     },
-    prof_img: {
+    profImg: {
       type: String,
     },
     contact: {

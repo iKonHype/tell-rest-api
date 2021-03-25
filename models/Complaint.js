@@ -1,13 +1,19 @@
 /**
  * @module model/complaint
+ * @requires module:helpers/Enumeration
  */
 
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
+const { status } = require("../helpers/Enumerations");
 
 const complaintSchema = new mongoose.Schema(
   {
     owner: {
+      type: ObjectId,
+      ref: "User",
+    },
+    authority: {
       type: ObjectId,
       ref: "User",
     },
@@ -16,6 +22,7 @@ const complaintSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      enum: Object.values(status),
       default: "open",
     },
     category: {
@@ -23,10 +30,6 @@ const complaintSchema = new mongoose.Schema(
       ref: "Category",
     },
     location: {
-      landmark: {
-        type: String,
-        trim: true,
-      },
       line: {
         type: String,
         trim: true,
@@ -35,10 +38,18 @@ const complaintSchema = new mongoose.Schema(
         type: String,
         trim: true,
       },
+      postal: {
+        type: String,
+        trim: true,
+      },
       district: {
         type: String,
         trim: true,
       },
+    },
+    landmark: {
+      type: String,
+      trim: true,
     },
     votes: [
       {
