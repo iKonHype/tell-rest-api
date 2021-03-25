@@ -12,9 +12,10 @@ const {
  * @async
  */
 const signupController = async (req, res) => {
+  console.log("in signup");
   try {
+    console.log("@SignupController"); //<-- clg
     const { result, success } = await signup(req.body);
-    console.log("@SignupController", result); //<-- clg
     if (!success) {
       return res.status(400).json({
         result,

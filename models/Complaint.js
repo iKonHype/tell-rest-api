@@ -17,6 +17,9 @@ const complaintSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "User",
     },
+    title: {
+      type: String,
+    },
     content: {
       type: String,
     },

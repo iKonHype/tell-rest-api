@@ -18,13 +18,13 @@ const {
  * @description Sign-up user
  * @name post/signup
  */
-router.post("/signup", checkEmail, checkUsername, signupController);
+router.post("/signup", checkEmail, signupController);
 
 /**
  * @description activate and register user
  * @name post/activate
  */
-router.post("/activate", checkEmail, checkUsername, activateAccountController);
+router.post("/activate", checkEmail, activateAccountController);
 
 /**
  * @description Sign-in user
