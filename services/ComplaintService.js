@@ -1,11 +1,9 @@
 /**
  * @module service/complaint
  * @requires module:model/complaint
- * @requires module:helpers/Enumeration
  */
 
 const Complaint = require("../models/Complaint");
-const { status: enumStatus } = require("../helpers/Enumerations");
 
 /**
  * Create a new complaint [User]

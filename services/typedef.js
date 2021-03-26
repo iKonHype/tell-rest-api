@@ -10,6 +10,19 @@ const defaultReturnType = {
 };
 
 /**
+ * @description Response return structure
+ * @typedef {object} Response
+ * @property {object|string|object[]|string[]} result promise results
+ * @property {boolean} success true|false
+ * @property {string} msg comment on the response
+ */
+const Response = {
+  result: null,
+  success: null,
+  msg: null,
+};
+
+/**
  * @description Default location structure
  * @typedef {Object} Location
  * @property {string} line Street address
