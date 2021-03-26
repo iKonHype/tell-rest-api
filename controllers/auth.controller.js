@@ -1,32 +1,30 @@
-const {
-  signup,
-  activate,
-  signin,
-  refresh,
-} = require("../services/AuthService");
+/**
+ * @module controller/auth
+ * @requires module:service/auth
+ */
+
+const authService = require("../services/AuthService");
 
 /**
- * @description Sent verification mail on sign-up
+ * Sent verification mail on sign-up
  * @param {HTTP} req
  * @param {HTTP} res
- * @async
+ * @returns {Response}
  */
-const signupController = async (req, res) => {
-  console.log("in signup");
+exports.signupController = (req, res) => {
   try {
-    console.log("@SignupController"); //<-- clg
-    const { result, success } = await signup(req.body);
+    const { result, success } = authService.signup(req.body);
     if (!success) {
       return res.status(400).json({
         result,
         success,
-        msg: result,
+        msg: "signup failed",
       });
     }
     return res.status(200).json({
       result,
       success,
-      msg: "Signup mail has been sent successfully",
+      msg: "Signup successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -38,14 +36,14 @@ const signupController = async (req, res) => {
 };
 
 /**
- * @description Register user account and activate
+ * Register user account and activate
  * @param {HTTP} req
  * @param {HTTP} res
- * @async
+ * @@returns {Response}
  */
-const activateAccountController = async (req, res) => {
+exports.activateAccountController = (req, res) => {
   try {
-    const { result, success } = await activate(req.body);
+    const { result, success } = authService.activate(req.body);
     if (!success) {
       return res.status(400).json({
         result,
@@ -68,25 +66,21 @@ const activateAccountController = async (req, res) => {
 };
 
 /**
- * @description Sign-in user
+ * Sign-in user
  * @param {HTTP} req
  * @param {HTTP} res
- * @async
+ * @returns {Response}
  */
-const signinController = async (req, res) => {
-  const isError = validationResult(req);
-  if (!isError.isEmpty())
-    return res.status(422).json({ result: isError.array(), success: false });
-
+exports.signinController = (req, res) => {
   try {
-    const { result, success } = await signin(req.body);
-    if (!success) return res.status(400).json({ result, success });
-    console.log("@SigninController", success); // <-- clg
+    const { result, success } = authService.signin(req.body);
+    if (!success)
+      return res.status(400).json({ result, success, msg: "signin failed" });
 
     return res.status(200).json({
       result,
       success,
-      msg: "Singned in successfully",
+      msg: "Singin success",
     });
   } catch (error) {
     return res.status(500).json({
@@ -98,28 +92,35 @@ const signinController = async (req, res) => {
 };
 
 /**
- * @description Send a new sign token and new refresh token
+ * Send a new sign token and new refresh token
  * @param {HTTP} req
  * @param {HTTP} res
+ * @returns {Response}
  */
-const refreshTokenController = (req, res) => {
-  const { result, success } = refresh(req.body);
+exports.refreshTokenController = (req, res) => {
+  const { result, success } = authService.refresh(req.body);
   if (!success) {
     return res.status(401).json({
       result,
       success,
-      msg: result,
+      msg: "Unauthorized",
     });
   }
   return res.status(200).json({
     result,
     success,
-    msg: "New tokens",
+    msg: "Tokens refreshed",
   });
 };
 
-// FIXME: signout
-const signoutController = (req, res) => {
+/**
+ * Signout a user
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+// FIXME: sign out controller logic and structure
+exports.signoutController = (req, res) => {
   try {
     req.profile = undefined;
     return res.clearCookie("token").json({
@@ -129,12 +130,4 @@ const signoutController = (req, res) => {
   } catch (error) {
     return res.status(500).json(error);
   }
-};
-
-module.exports = {
-  signupController,
-  activateAccountController,
-  signinController,
-  refreshTokenController,
-  signoutController,
 };

@@ -1,5 +1,6 @@
 /**
  * @module service/auth
+ * @requires module:service/communication
  * @requires module:helpers/cipherEngine
  * @requires module:helpers/JWTEngine
  */

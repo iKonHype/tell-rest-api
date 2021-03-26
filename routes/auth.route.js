@@ -1,44 +1,38 @@
-const router = require("express").Router();
+/**
+ * @module router/auth
+ * @requires module:controller/auth
+ * @requires module:middleware/checkpoint
+ */
 
-//#region IMPORTS
-const {
-  signupController,
-  activateAccountController,
-  signinController,
-  refreshTokenController,
-  signoutController,
-} = require("../controllers/auth.controller");
-const {
-  checkEmail,
-  checkUsername,
-} = require("../middlewares/userAvailabilityChecker");
-//#endregion
+const router = require("express").Router();
+const auth = require("../controllers/auth.controller");
+const checkpoint = require("../middlewares/checkpoint");
 
 /**
  * @description Sign-up user
  * @name post/signup
  */
-router.post("/signup", checkEmail, signupController);
+router.post("/signup", checkpoint.checkEmail, auth.signupController);
 
 /**
  * @description activate and register user
  * @name post/activate
  */
-router.post("/activate", checkEmail, activateAccountController);
+router.post("/activate", checkpoint.checkEmail, auth.activateAccountController);
 
 /**
  * @description Sign-in user
  * @name post/signin
  */
-router.post("/signin", signinController);
+router.post("/signin", auth.signinController);
 
 /**
  * @description refresh token
  * @name post/refresh-token
  */
-router.post("/refresh-token", refreshTokenController);
+router.post("/refresh-token", auth.refreshTokenController);
 
 // FIXME: Signout route
-router.get("/signout", signoutController);
+router.get("/signout", auth.signoutController);
 
 module.exports = router;
