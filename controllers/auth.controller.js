@@ -7,13 +7,14 @@ const authService = require("../services/AuthService");
 
 /**
  * Sent verification mail on sign-up
+ * @async
  * @param {HTTP} req
  * @param {HTTP} res
  * @returns {Response}
  */
-exports.signupController = (req, res) => {
+exports.signupController = async (req, res) => {
   try {
-    const { result, success } = authService.signup(req.body);
+    const { result, success } = await authService.signup(req.body);
     if (!success) {
       return res.status(400).json({
         result,
@@ -37,13 +38,14 @@ exports.signupController = (req, res) => {
 
 /**
  * Register user account and activate
+ * @async
  * @param {HTTP} req
  * @param {HTTP} res
  * @@returns {Response}
  */
-exports.activateAccountController = (req, res) => {
+exports.activateAccountController = async (req, res) => {
   try {
-    const { result, success } = authService.activate(req.body);
+    const { result, success } = await authService.activate(req.body);
     if (!success) {
       return res.status(400).json({
         result,
@@ -67,13 +69,14 @@ exports.activateAccountController = (req, res) => {
 
 /**
  * Sign-in user
+ * @async
  * @param {HTTP} req
  * @param {HTTP} res
  * @returns {Response}
  */
-exports.signinController = (req, res) => {
+exports.signinController = async (req, res) => {
   try {
-    const { result, success } = authService.signin(req.body);
+    const { result, success } = await authService.signin(req.body);
     if (!success)
       return res.status(400).json({ result, success, msg: "signin failed" });
 
