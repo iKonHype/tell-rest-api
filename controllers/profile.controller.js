@@ -172,31 +172,32 @@ const adminreadController = async (req, res) => {
     });
   }
 }; //Profile delete
-const deleteController = async (req, res) => {
-  try {
-    const { result, success } = await ProfileService.deleteProfilebyID(
-      req.params.userId
-    );
-    if (!success) {
-      return res.status(400).json({
-        result,
-        success,
-        msg: "Profile deletion failed",
-      });
-    }
-    return res.status(200).json({
-      result,
-      success,
-      msg: "Delete success",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      msg: "Internal server error @deleteProfilebyId",
-      err: error.message,
-      success: false,
-    });
-  }
-};
+
+// const deleteController = async (req, res) => {
+//   try {
+//     const { result, success } = await ProfileService.deleteProfilebyID(
+//       req.params.userId
+//     );
+//     if (!success) {
+//       return res.status(400).json({
+//         result,
+//         success,
+//         msg: "Profile deletion failed",
+//       });
+//     }
+//     return res.status(200).json({
+//       result,
+//       success,
+//       msg: "Delete success",
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       msg: "Internal server error @deleteProfilebyId",
+//       err: error.message,
+//       success: false,
+//     });
+//   }
+// };
 
 //Profile delete
 const admindeleteController = async (req, res) => {
