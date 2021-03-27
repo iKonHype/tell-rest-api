@@ -1,6 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const serverless = require("serverless-http");
 
 require("dotenv").config({ path: "./config/.env" });
 require("./db/connect");
@@ -14,11 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
+const baseRoute = "/.netlify/functions/api";
 const authRoute = require("./routes/auth.route");
 const complaintRoute = require("./routes/complaint.route");
 
-app.use("/api/auth", authRoute);
-app.use("/api/complaints", complaintRoute);
+app.use(`${baseRoute}/auth`, authRoute);
+app.use(`${baseRoute}/complaints`, complaintRoute);
 
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {
@@ -45,3 +47,5 @@ app.listen(PORT, () =>
     `⚡ [server] Server is running on ${PORT} in ${process.env.NODE_ENV} mode`
   )
 );
+
+module.exports.handler = serverless(app);
