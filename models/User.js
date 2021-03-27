@@ -5,9 +5,11 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const { v1: uuidv1 } = require("uuid");
-
 const { ObjectId } = mongoose.Schema;
 
+/**
+ * User schema
+ */
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -94,7 +96,9 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// mongoose virtual for password encryption
+/**
+ * Mongoose virtual for password encryption
+ */
 userSchema
   .virtual("password")
   .set(function (password) {
@@ -106,8 +110,15 @@ userSchema
     return this._password;
   });
 
+/**
+ * Mongoose schema methods
+ */
 userSchema.methods = {
-  // Encrypt password with sha256
+  /**
+   * Hash password
+   * @param {string} plainpass
+   * @returns {string} hashed password
+   */
   securePassword: function (plainpass) {
     if (!plainpass) return "";
     try {
@@ -120,7 +131,11 @@ userSchema.methods = {
     }
   },
 
-  // Authenticate user by password
+  /**
+   * Authenticate user by password
+   * @param {string} plainpass
+   * @returns {boolean} Returns password match is true or false
+   */
   authenticate: function (plainpass) {
     return this.securePassword(plainpass) === this.encry_password;
   },

@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 const { status } = require("../helpers/Enumerations");
 
+/**
+ * Complaint schema
+ */
 const complaintSchema = new mongoose.Schema(
   {
     owner: {
@@ -15,7 +18,7 @@ const complaintSchema = new mongoose.Schema(
     },
     authority: {
       type: ObjectId,
-      ref: "User",
+      ref: "Authority",
     },
     title: {
       type: String,
