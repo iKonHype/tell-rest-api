@@ -18,9 +18,11 @@ app.use(cors());
 const baseRoute = "/.netlify/functions/api";
 const authRoute = require("./routes/auth.route");
 const complaintRoute = require("./routes/complaint.route");
+const profileRoute = require("./routes/profile.route");
 
 app.use(`${baseRoute}/auth`, authRoute);
 app.use(`${baseRoute}/complaints`, complaintRoute);
+app.use(`${baseRoute}/profile`, profileRoute);
 
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {
