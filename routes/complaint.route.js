@@ -4,6 +4,7 @@
  */
 const router = require("express").Router();
 const complaint = require("../controllers/complaint.controller");
+const { acceptEmail } = require("../services/CommunicationService");
 
 /**
  * Create a new route [User]
@@ -111,5 +112,25 @@ router.get(
  * @example {base_url}/complaints/rm/123
  */
 router.delete("/rm/:complaintId", complaint.deleteComplaitByIdController);
+
+router.post("/testmail", async (req, res) => {
+  try {
+    const emailBody = {
+      userEmail: "alwiskaveen@gmail.com",
+      userFirstName: "Kaveen",
+      complaintID: "6bf334567y778",
+      complaintTitle: "කුනු අයින් කරපන් යකෝ...",
+    };
+    const { result, success } = await acceptEmail(
+      emailBody.userEmail,
+      emailBody.userFirstName,
+      emailBody.complaintID,
+      emailBody.complaintTitle
+    );
+    res.status(200).json({ result, success, msg: "කුනු අයින් කරපන් යකෝ" });
+  } catch (error) {
+    res.status(500).json("කුනු අයින් කරපන් යකෝ");
+  }
+});
 
 module.exports = router;
