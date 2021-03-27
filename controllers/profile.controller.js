@@ -1,51 +1,61 @@
 const ProfileService = require("../services/ProfileService");
 
- 
-  
 //Profile update
-  const updateController=async(req,res)=>{
-    const { userId,firstName,lastName,email,gender,birthdate,profImg,contact,occupation,address,city,postal,district} = req.body;
+const updateController = async (req, res) => {
+  const {
+    userId,
+    firstName,
+    lastName,
+    email,
+    gender,
+    birthdate,
+    profImg,
+    contact,
+    occupation,
+    address,
+    city,
+    postal,
+    district,
+  } = req.body;
 
-    try {
-      const { result, success } = await ProfileService.updateProfile(
-        userId,
-        firstName,
-        lastName,
-        email,
-        gender,
-        birthdate,
-        profImg,
-        contact,
-        occupation,
-        address,
-        city,
-        postal,
-        district,
-        
-      );
-      if (!success) {
-        return res.status(400).json({
-          result,
-          success,
-          msg: "Profile update failed",
-        });
-      }
-      return res.status(201).json({
+  try {
+    const { result, success } = await ProfileService.updateProfile(
+      userId,
+      firstName,
+      lastName,
+      email,
+      gender,
+      birthdate,
+      profImg,
+      contact,
+      occupation,
+      address,
+      city,
+      postal,
+      district
+    );
+    if (!success) {
+      return res.status(400).json({
         result,
         success,
-        msg: "Update success",
-      });
-    } catch (error) {
-      return res.status(500).json({
-        msg: "Internal server error",
-        err: error.message,
-        success: false,
+        msg: "Profile update failed",
       });
     }
-
-  };
+    return res.status(201).json({
+      result,
+      success,
+      msg: "Update success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Internal server error",
+      err: error.message,
+      success: false,
+    });
+  }
+};
 //Profile read
-const readController=async (req,res)=>{
+const readController = async (req, res) => {
   try {
     const { result, success } = await ProfileService.getProfilebyId(
       req.params.userId
@@ -71,10 +81,11 @@ const readController=async (req,res)=>{
   }
 };
 //Profile delete
-const deleteController=async (req,res)=>{
- 
+const deleteController = async (req, res) => {
   try {
-    const {result,success}= await ProfileService.deleteProfilebyID(req.params.userId);
+    const { result, success } = await ProfileService.deleteProfilebyID(
+      req.params.userId
+    );
     if (!success) {
       return res.status(400).json({
         result,
@@ -94,46 +105,49 @@ const deleteController=async (req,res)=>{
       success: false,
     });
   }
-  
 };
 
+const adminController = async (req, res) => {
+  const {
+    authorityName,
+    username,
+    email,
+    password,
+    contact,
+    district,
+  } = require.body;
 
-const adminController=(req,res)=>{
-const{authorityName, username,email,password,contact,district}=require.body;
-
-try {
-  const { result, success } = await ProfileService.updateAdmin(
-   authorityName,
-   username,
-   email,
-   password,
-   contact,
-   district,
-    
-  );
-  if (!success) {
-    return res.status(400).json({
+  try {
+    const { result, success } = await ProfileService.updateAdmin(
+      authorityName,
+      username,
+      email,
+      password,
+      contact,
+      district
+    );
+    if (!success) {
+      return res.status(400).json({
+        result,
+        success,
+        msg: "auth update failed",
+      });
+    }
+    return res.status(201).json({
       result,
       success,
-      msg: "auth update failed", 
+      msg: "auth success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Internal server error",
+      err: error.message,
+      success: false,
     });
   }
-  return res.status(201).json({
-    result,
-    success,
-    msg: "auth success",
-  });
-} catch (error) {
-  return res.status(500).json({
-    msg: "Internal server error",
-    err: error.message,
-    success: false,
-  });
-}
+};
 
-}
-
-const adminreadController=async (req,res)=>{
+const adminreadController = async (req, res) => {
   try {
     const { result, success } = await ProfileService.getProfilebyId(
       req.params.userId
@@ -157,11 +171,12 @@ const adminreadController=async (req,res)=>{
       success: false,
     });
   }
-};//Profile delete
-const deleteController=async (req,res)=>{
- 
+}; //Profile delete
+const deleteController = async (req, res) => {
   try {
-    const {result,success}= await ProfileService.deleteProfilebyID(req.params.userId);
+    const { result, success } = await ProfileService.deleteProfilebyID(
+      req.params.userId
+    );
     if (!success) {
       return res.status(400).json({
         result,
@@ -181,14 +196,14 @@ const deleteController=async (req,res)=>{
       success: false,
     });
   }
-  
 };
 
 //Profile delete
-const admindeleteController=async (req,res)=>{
- 
+const admindeleteController = async (req, res) => {
   try {
-    const {result,success}= await ProfileService.deleteProfilebyID(req.params.userId);
+    const { result, success } = await ProfileService.deleteProfilebyID(
+      req.params.userId
+    );
     if (!success) {
       return res.status(400).json({
         result,
@@ -208,14 +223,13 @@ const admindeleteController=async (req,res)=>{
       success: false,
     });
   }
-  
 };
 
-module.exports={
+module.exports = {
   updateController,
   readController,
   deleteController,
   adminController,
   adminreadController,
-  admindeleteController
+  admindeleteController,
 };
