@@ -9,25 +9,25 @@ const auth = require("../controllers/auth.controller");
 const checkpoint = require("../middlewares/checkpoint");
 
 /**
- * @description Sign-up user
+ * Sign-up user
  * @name post/signup
  */
 router.post("/signup", checkpoint.checkEmail, auth.signupController);
 
 /**
- * @description activate and register user
+ * activate and register user
  * @name post/activate
  */
 router.post("/activate", checkpoint.checkEmail, auth.activateAccountController);
 
 /**
- * @description Sign-in user
+ * Sign-in user
  * @name post/signin
  */
 router.post("/signin", auth.signinController);
 
 /**
- * @description refresh token
+ * refresh token
  * @name post/refresh-token
  */
 router.post("/refresh-token", auth.refreshTokenController);
