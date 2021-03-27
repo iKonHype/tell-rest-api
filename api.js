@@ -15,8 +15,10 @@ app.use(cookieParser());
 app.use(cors());
 
 const authRoute = require("./routes/auth.route");
+const complaintRoute = require("./routes/complaint.route");
 
 app.use("/api/auth", authRoute);
+app.use("/api/complaints", complaintRoute);
 
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {
