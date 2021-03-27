@@ -160,7 +160,7 @@ exports.upvoteComplaintController = async (req, res) => {
  * @returns {Response}
  */
 exports.confirmProgressDoneController = async (req, res) => {
-  const { userId, complaintId } = req.body;
+  const { userId, complaintId } = req.params;
   try {
     const { result, success } = await complaintService.confirmProgressDone(
       userId,
@@ -296,10 +296,10 @@ exports.getComplaintsByCategoryController = async (req, res) => {
  * @param {HTTP} res
  * @returns {Response}
  */
-exports.getAllComplaintsByCity = async (req, res) => {
+exports.getAllComplaintsByCityController = async (req, res) => {
   try {
     const { result, success } = await complaintService.getAllComplaintsByCity(
-      req.query.city
+      req.query.q
     );
     if (!success) {
       return res.status(400).json({
@@ -334,7 +334,7 @@ exports.getAllComplaintsByDistrictController = async (req, res) => {
     const {
       result,
       success,
-    } = await complaintService.getAllComplaintsByDistrict(req.query.district);
+    } = await complaintService.getAllComplaintsByDistrict(req.query.q);
     if (!success) {
       return res.status(400).json({
         result,
@@ -402,9 +402,7 @@ exports.getAllComplaintsByStatusForAdminController = async (req, res) => {
     const {
       result,
       success,
-    } = await complaintService.getAllComplaintsByStatusForAdmin(
-      req.query.state
-    );
+    } = await complaintService.getAllComplaintsByStatusForAdmin(req.query.q);
     if (!success) {
       return res.status(400).json({
         result,
