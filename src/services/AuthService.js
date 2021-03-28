@@ -122,12 +122,12 @@ exports.signin = async (payload) => {
     if (!user) throw new Error("Email is not valid or not a registered user");
     if (!user.authenticate(password)) throw new Error("Password is not valid");
 
-    const signedRes = signJWT({ id: user._id }); // <- Create the sign token
+    const signedRes = signJWT({ id: user._id, role: user.role }); // <- Create the sign token
     if (!signedRes.success)
       return { result: signedRes.result, success: signedRes.success };
     const signToken = signedRes.result;
 
-    const refreshRes = refreshJWT({ id: user._id }); // <- Create the refresh token
+    const refreshRes = refreshJWT({ id: user._id, role: user.role }); // <- Create the refresh token
     if (!refreshRes.success)
       return { result: refreshRes.result, success: refreshRes.success };
     const refToken = refreshRes.result;
@@ -158,7 +158,7 @@ exports.signin = async (payload) => {
  * @param {string} district
  * @returns {defaultReturnType} Saved authority doc
  */
-exports.createAdminProfile = async (
+exports.createAuthorityProfile = async (
   authorityName,
   username,
   email,
@@ -192,7 +192,7 @@ exports.createAdminProfile = async (
  * @param {String} password
  * @returns Authority id and tokens
  */
-exports.authSignIn = async (username, password) => {
+exports.authoritySignIn = async (username, password) => {
   try {
     const authority = await Authority.findOne({ username });
 
@@ -201,12 +201,12 @@ exports.authSignIn = async (username, password) => {
     if (!authority.authenticate(password))
       throw new Error("Password is not valid");
 
-    const signedRes = signJWT({ id: authority._id }); // <- Create the sign token
+    const signedRes = signJWT({ id: authority._id, role: authority.role }); // <- Create the sign token
     if (!signedRes.success)
       return { result: signedRes.result, success: signedRes.success };
     const signToken = signedRes.result;
 
-    const refreshRes = refreshJWT({ id: authority._id }); // <- Create the refresh token
+    const refreshRes = refreshJWT({ id: authority._id, role: authority.role }); // <- Create the refresh token
     if (!refreshRes.success)
       return { result: refreshRes.result, success: refreshRes.success };
     const refToken = refreshRes.result;
@@ -238,14 +238,15 @@ exports.refresh = (payload) => {
   const verifyRef = verifyRefreshJWT(refreshToken); // <- decode signup token
   if (!verifyRef.success)
     return { result: verifyRef.result, success: verifyRef.success };
-  const id = verifyRef.result.id;
 
-  const signedRes = signJWT({ id }); // <- Create the sign token
+  const { id, role } = verifyRef.result;
+
+  const signedRes = signJWT({ id, role }); // <- Create the sign token
   if (!signedRes.success)
     return { result: signedRes.result, success: signedRes.success };
   const signToken = signedRes.result;
 
-  const refreshRes = refreshJWT({ id }); // <- Create the refresh token
+  const refreshRes = refreshJWT({ id, role }); // <- Create the refresh token
   if (!refreshRes.success)
     return { result: refreshRes.result, success: refreshRes.success };
   const refToken = refreshRes.result;
