@@ -1,38 +1,22 @@
+/**
+ * @module controller/profile
+ * @requires module:service/profile
+ */
+
 const ProfileService = require("../services/ProfileService");
 
-//Profile update
-const updateController = async (req, res) => {
-  const {
-    userId,
-    firstName,
-    lastName,
-    email,
-    gender,
-    birthdate,
-    profImg,
-    contact,
-    occupation,
-    address,
-    city,
-    postal,
-    district,
-  } = req.body;
+//#region User
 
+/**
+ * Update user profile [User]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.updateUserController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.updateProfile(
-      userId,
-      firstName,
-      lastName,
-      email,
-      gender,
-      birthdate,
-      profImg,
-      contact,
-      occupation,
-      address,
-      city,
-      postal,
-      district
+    const { result, success } = await ProfileService.updateUserProfile(
+      req.body
     );
     if (!success) {
       return res.status(400).json({
@@ -54,10 +38,16 @@ const updateController = async (req, res) => {
     });
   }
 };
-//Profile read
-const readController = async (req, res) => {
+
+/**
+ * Get user profile [Admin|User]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.getUserProfileController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.getProfilebyId(
+    const { result, success } = await ProfileService.readUserProfile(
       req.params.userId
     );
     if (!success) {
@@ -80,10 +70,16 @@ const readController = async (req, res) => {
     });
   }
 };
-//Profile delete
-const deleteController = async (req, res) => {
+
+/**
+ * Delete user profile [Admin|User]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.deleteUserProfileController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.deleteProfilebyID(
+    const { result, success } = await ProfileService.deleteUserProfile(
       req.params.userId
     );
     if (!success) {
@@ -106,25 +102,20 @@ const deleteController = async (req, res) => {
     });
   }
 };
+//#endregion
 
-const adminController = async (req, res) => {
-  const {
-    authorityName,
-    username,
-    email,
-    password,
-    contact,
-    district,
-  } = require.body;
+//#region Authority
 
+/**
+ * Update authority profile [Admin|Authority]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.updateAuthoritynProfileController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.updateAdmin(
-      authorityName,
-      username,
-      email,
-      password,
-      contact,
-      district
+    const { result, success } = await ProfileService.updateAuthorityProfile(
+      req.body
     );
     if (!success) {
       return res.status(400).json({
@@ -147,9 +138,15 @@ const adminController = async (req, res) => {
   }
 };
 
-const adminreadController = async (req, res) => {
+/**
+ * Get authority profile [Admin|Authority]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.getAuthorityProfileController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.getProfilebyId(
+    const { result, success } = await ProfileService.readAuthorityProfile(
       req.params.userId
     );
     if (!success) {
@@ -171,38 +168,17 @@ const adminreadController = async (req, res) => {
       success: false,
     });
   }
-}; //Profile delete
+};
 
-// const deleteController = async (req, res) => {
-//   try {
-//     const { result, success } = await ProfileService.deleteProfilebyID(
-//       req.params.userId
-//     );
-//     if (!success) {
-//       return res.status(400).json({
-//         result,
-//         success,
-//         msg: "Profile deletion failed",
-//       });
-//     }
-//     return res.status(200).json({
-//       result,
-//       success,
-//       msg: "Delete success",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       msg: "Internal server error @deleteProfilebyId",
-//       err: error.message,
-//       success: false,
-//     });
-//   }
-// };
-
-//Profile delete
-const admindeleteController = async (req, res) => {
+/**
+ * Delete authortiy profile [Admin]
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.deleteAuthorityProfileController = async (req, res) => {
   try {
-    const { result, success } = await ProfileService.deleteProfilebyID(
+    const { result, success } = await ProfileService.deleteAuthorityProfile(
       req.params.userId
     );
     if (!success) {
@@ -225,12 +201,4 @@ const admindeleteController = async (req, res) => {
     });
   }
 };
-
-module.exports = {
-  updateController,
-  readController,
-  deleteController,
-  adminController,
-  adminreadController,
-  admindeleteController,
-};
+//#endregion
