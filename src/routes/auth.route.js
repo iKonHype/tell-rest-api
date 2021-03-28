@@ -7,6 +7,7 @@ const router = require("express").Router();
 const auth = require("../controllers/auth.controller");
 const checkpoint = require("../middlewares/checkpoint");
 
+//#region User
 /**
  * Sign-up user
  * @name post/signup
@@ -27,6 +28,30 @@ router.post("/activate", checkpoint.checkEmail, auth.activateAccountController);
  * @example {base_url}/auth/signin
  */
 router.post("/signin", auth.signinController);
+//#endregion
+
+//#region Authority
+/**
+ * SCreate new authority profile [Admin]
+ * @name post/pro-new
+ * @example {base_url}/auth/pro/new
+ */
+router.post(
+  "/pro/new",
+  checkpoint.isSignedIn,
+  checkpoint.isAuthenticated,
+  checkpoint.isAdmin,
+  checkpoint.isUsernameExist,
+  auth.createAuthorityProfileController
+);
+
+/**
+ * Sign-in admin/authority [Admin|Authority]
+ * @name post/pro-signin
+ * @example {base_url}/auth/pro/signin
+ */
+router.post("/pro/signin", auth.signinAuthorityController);
+//#endregion
 
 /**
  * refresh token
