@@ -1,39 +1,45 @@
 /**
  * @module service/communication
+ * @requires module:helpers/generateOTP
  */
 
-const nodemailer = require("nodemailer");
 const generateOTP = require("../helpers/generateOTP");
-const needle = require("needle");
-const baseUrl = "https://us-central1-sewa-5df00.cloudfunctions.net/app";
+const axios = require("axios");
 
-/**
- * @description Send verification email
- * @param {String} userEmail Receiver email
- * @param {String} userFirstName Receiver first name
- * @async
- */
-exports.sendVerificationMail = async (userEmail, userFirstName) => {
-  const OTP = generateOTP();
-  // TODO: get email service from tell-com-service
-  return { result: null, success: true };
-};
+axios.default({
+  baseURL: "https://us-central1-sewa-5df00.cloudfunctions.net/app",
+  timeout: 10000,
+  timeoutErrorMessage:
+    "Request timeout! Please check your internet connection...",
+});
 
-exports.acceptEmail = async (
-  userEmail,
-  userFirstName,
-  complaintID,
-  complaintTitle
-) => {
-  try {
-    const response = await needle.post(`${baseUrl}/email/accept/`, {
-      userEmail,
-      userFirstName,
-      complaintID,
+exports.api = {
+  anyEmail: (email, subject, body) =>
+    axios.post("/email/send", {
+      userEmail: email,
+      emaailSubject: subject,
+      emailBody: body,
+    }),
+  complaintAccept: (email, name, complaintId, complaintTitle) =>
+    axios.post("/email/accept", {
+      userEmail: email,
+      userFirstName: name,
+      complaintID: complaintId,
       complaintTitle,
-    });
-    return { result: response, success: true };
-  } catch (error) {
-    return { result: error.message, success: false };
-  }
+    }),
+  complaintReject: (email, name, complaintId, complaintTitle) =>
+    axios.post("/email/reject", {
+      userEmail: email,
+      userFirstName: name,
+      complaintID: complaintId,
+      complaintTitle,
+    }),
+  complaintComplete: (email, name, complaintId, complaintTitle, link) =>
+    axios.post("/email/complete", {
+      serEmail: email,
+      userFirstName: name,
+      complaintID: complaintId,
+      complaintTitle,
+      link,
+    }),
 };
