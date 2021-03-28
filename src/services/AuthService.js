@@ -144,7 +144,6 @@ exports.signin = async (payload) => {
     return { result: error.message, success: false };
   }
 };
-
 //#endregion
 
 //#region Authority
@@ -187,10 +186,46 @@ exports.createAdminProfile = async (
   }
 };
 
-exports.authSignIn = async (payload) => {
-  
-}
+/**
+ * Authoritty sign-in [Authority]
+ * @param {String} username
+ * @param {String} password
+ * @returns Authority id and tokens
+ */
+exports.authSignIn = async (username, password) => {
+  try {
+    const authority = await Authority.findOne({ username });
+
+    if (!authority)
+      throw new Error("Email is not valid or not a registered authority");
+    if (!authority.authenticate(password))
+      throw new Error("Password is not valid");
+
+    const signedRes = signJWT({ id: authority._id }); // <- Create the sign token
+    if (!signedRes.success)
+      return { result: signedRes.result, success: signedRes.success };
+    const signToken = signedRes.result;
+
+    const refreshRes = refreshJWT({ id: authority._id }); // <- Create the refresh token
+    if (!refreshRes.success)
+      return { result: refreshRes.result, success: refreshRes.success };
+    const refToken = refreshRes.result;
+
+    return {
+      result: {
+        id: authority._id,
+        signToken,
+        refToken,
+      },
+      success: true,
+    };
+  } catch (error) {
+    return { result: error.message, success: false };
+  }
+};
 //#endregion
+
+//#region Common
 
 /**
  * @description Refresh sign token
@@ -217,3 +252,4 @@ exports.refresh = (payload) => {
 
   return { result: { signToken, refToken, id }, success: true };
 };
+//#endregion
