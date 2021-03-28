@@ -1,16 +1,19 @@
 /**
  * @module service/profile
- * @require module:model/user
+ * @requires module:model/user
+ * @requires module:model.authority
  */
 const User = require("../models/User");
+const Authority = require("../models/Authority");
 
+//#region  User Profile
 /**
  * Update user profile
  * @async
  * @param {object} payload HTTP request body
  * @returns {defaultReturnType} Updated profile
  */
-exports.updateProfile = async (payload) => {
+exports.updateUserProfile = async (payload) => {
   try {
     const userId = payload.userId;
     payload.userId = undefined;
@@ -30,27 +33,37 @@ exports.updateProfile = async (payload) => {
   }
 };
 
-//dispaly/read profile
-exports.readProfile = async (userId) => {
+/**
+ * Get user profile
+ * @param {objectId} userId
+ * @returns {defaultReturnType} user profile
+ */
+exports.readUserProfile = async (userId) => {
   try {
-    const result = await User.findById(userId);
+    const result = await User.findById(userId).select("-salt -encry_password");
     if (!result) return { result, success: false };
 
     return { result, success: true };
   } catch (error) {
     return { result: error.message, success: false };
   }
-  //const result=await User.
 };
 
-//delete profile
-
-exports.deleteProfile = async (userId) => {
+/**
+ * Delete a user by id
+ * @param {objectId} userId
+ * @returns {defaultReturnType}
+ */
+exports.deleteUserProfile = async (userId) => {
   try {
     const result = await User.findByIdAndDelete(userId);
-
     return { result, success: true };
   } catch (error) {
     return { result: error.message, success: false };
   }
 };
+//#endregion
+
+//#region  Authority profile
+
+//#endregion

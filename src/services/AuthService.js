@@ -1,11 +1,14 @@
 /**
  * @module service/auth
+ * @requires module:model/user
+ * @requires module:model/authority
  * @requires module:service/communication
  * @requires module:helpers/cipherEngine
  * @requires module:helpers/JWTEngine
  */
 
 const User = require("../models/User");
+const Authority = require("../models/Authority");
 const { sendVerificationMail } = require("../services/CommunicationService");
 const { encrypt, decrypt } = require("../helpers/cipherEngine");
 const {
@@ -15,6 +18,8 @@ const {
   verifyJWT,
   verifyRefreshJWT,
 } = require("../helpers/JWTEngine");
+
+//#region User
 
 /**
  * @description Sent verification mail on sign-up
@@ -139,6 +144,53 @@ exports.signin = async (payload) => {
     return { result: error.message, success: false };
   }
 };
+
+//#endregion
+
+//#region Authority
+
+/**
+ * Create a new authority profile [Admin]
+ * @param {string} authorityName
+ * @param {string} username
+ * @param {string} email
+ * @param {string} password
+ * @param {string} contact
+ * @param {string} district
+ * @returns {defaultReturnType} Saved authority doc
+ */
+exports.createAdminProfile = async (
+  authorityName,
+  username,
+  email,
+  password,
+  contact,
+  district
+) => {
+  try {
+    const authority = new Authority({
+      authorityName,
+      username,
+      email,
+      password,
+      contact,
+      district,
+    });
+
+    const result = await authority.save();
+    if (!result) return { result, success: false };
+    result.encry_password = undefined;
+    result.salt = undefined;
+    return { result, success: true };
+  } catch (error) {
+    return { result: error.message, success: false };
+  }
+};
+
+exports.authSignIn = async (payload) => {
+  
+}
+//#endregion
 
 /**
  * @description Refresh sign token
