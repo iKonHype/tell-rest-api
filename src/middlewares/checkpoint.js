@@ -102,7 +102,7 @@ exports.isAuthenticated = (req, res, next) => {
  * @param {fn} next
  */
 exports.isAuthority = async (req, res, next) => {
-  const isAuthority = req.auth.role === 49;
+  const isAuthority = req.auth.role === 49 || req.auth.role === 99;
   if (!isAuthority)
     return res.status(403).json({
       result: null,
