@@ -5,6 +5,7 @@
 
 const authService = require("../services/AuthService");
 
+//#region User
 /**
  * Sent verification mail on sign-up
  * @async
@@ -93,7 +94,89 @@ exports.signinController = async (req, res) => {
     });
   }
 };
+//#endregion
 
+//#region Authority
+
+/**
+ * Create authority [Admin]
+ * @async
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.createAuthorityProfileController = async (req, res) => {
+  try {
+    const {
+      authorityName,
+      username,
+      email,
+      password,
+      contact,
+      district,
+    } = req.body;
+    const { result, success } = await authService.createAuthorityProfile(
+      authorityName,
+      username,
+      email,
+      password,
+      contact,
+      district
+    );
+    if (!success) {
+      return res.status(400).json({
+        result,
+        success,
+        msg: "Creation failed",
+      });
+    }
+    return res.status(200).json({
+      result,
+      success,
+      msg: "Creation success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Internal server error @signupController",
+      err: error.message,
+      success: false,
+    });
+  }
+};
+
+/**
+ * Sign-in authority
+ * @async
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.signinAuthorityController = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const { result, success } = await authService.authoritySignIn(
+      username,
+      password
+    );
+    if (!success)
+      return res.status(400).json({ result, success, msg: "signin failed" });
+
+    return res.status(200).json({
+      result,
+      success,
+      msg: "Singin success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      result,
+      success,
+      msg: "Internal server error @signinController",
+    });
+  }
+};
+//#endregion
+
+//#region Common
 /**
  * Send a new sign token and new refresh token
  * @param {HTTP} req
@@ -115,22 +198,4 @@ exports.refreshTokenController = (req, res) => {
     msg: "Tokens refreshed",
   });
 };
-
-/**
- * Signout a user
- * @param {HTTP} req
- * @param {HTTP} res
- * @returns {Response}
- */
-// FIXME: sign out controller logic and structure
-exports.signoutController = (req, res) => {
-  try {
-    req.profile = undefined;
-    return res.clearCookie("token").json({
-      msg: "User has signout successfully",
-      success: true,
-    });
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+//#endregion
