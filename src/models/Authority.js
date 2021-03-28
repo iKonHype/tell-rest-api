@@ -36,6 +36,10 @@ const authoritySchema = new mongoose.Schema(
     district: {
       type: String,
     },
+    role: {
+      type: Number,
+      default: 49,
+    },
     salt: String,
   },
   { timestamps: true }

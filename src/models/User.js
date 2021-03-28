@@ -70,17 +70,6 @@ const userSchema = new mongoose.Schema(
         trim: true,
       },
     },
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        // required: true
-      },
-      coordinates: {
-        type: [Number],
-        // required: true
-      },
-    },
     complaints: [
       {
         type: ObjectId,
