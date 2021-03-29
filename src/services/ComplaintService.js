@@ -27,6 +27,7 @@ exports.createNewComplaint = async (
   try {
     const complaint = new Complaint({
       owner: userId,
+      title,
       content,
       category,
       location,

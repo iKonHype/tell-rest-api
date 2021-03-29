@@ -4,6 +4,7 @@
  */
 
 const complaintService = require("../services/ComplaintService");
+const { api } = require("../services/CommunicationService");
 
 /**
  * Create a new complaint by the user
@@ -30,6 +31,25 @@ exports.createNewComplaintController = async (req, res) => {
         msg: "Create new complaint failed",
       });
     }
+
+    const emailSubject = `Received New Complaint!`;
+
+    const emailBody = `<div><h1>Dear ${result.owner.firstName},</h1><p>Your complaint has been placed successfully. We will quickly take an action to resolve it</p><p>Title: ${result.title}<br />Id: tell-${result_id}</p><p>Thank you</p><p>Best Regards,<br/>tell</p></div>`;
+
+    const emailRes = await api.anyEmail(
+      result.owner.email,
+      emailSubject,
+      emailBody
+    );
+    if (!emailRes.success)
+      return res.status(400).json({
+        result: emailRes.result,
+        success: emailRes.success,
+        msg: "Sending Email failed",
+      });
+
+    //TODO: Sending SMS
+
     return res.status(201).json({
       result,
       success,
