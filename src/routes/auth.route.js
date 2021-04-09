@@ -13,14 +13,18 @@ const checkpoint = require("../middlewares/checkpoint");
  * @name post/signup
  * @example {base_url}/auth/signup
  */
-router.post("/signup", checkpoint.checkEmail, auth.signupController);
+router.post("/signup", checkpoint.isEmailExist, auth.signupController);
 
 /**
  * activate and register user
  * @name post/activate
  * @example {base_url}/auth/activate
  */
-router.post("/activate", checkpoint.checkEmail, auth.activateAccountController);
+router.post(
+  "/activate",
+  checkpoint.isEmailExist,
+  auth.activateAccountController
+);
 
 /**
  * Sign-in user
