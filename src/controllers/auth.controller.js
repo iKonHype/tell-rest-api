@@ -54,7 +54,7 @@ exports.activateAccountController = async (req, res) => {
         msg: "Couldn't register user. Please Try again later",
       });
     }
-    return res.status(200).json({
+    return res.status(201).json({
       result,
       success,
       msg: "You have been registered successfully",

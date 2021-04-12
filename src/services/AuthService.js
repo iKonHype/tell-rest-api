@@ -11,6 +11,7 @@ const User = require("../models/User");
 const Authority = require("../models/Authority");
 const { sendVerificationMail } = require("../services/CommunicationService");
 const { encrypt, decrypt } = require("../helpers/cipherEngine");
+const otpGen = require("../helpers/generateOTP");
 const {
   signJWT,
   refreshJWT,
@@ -44,12 +45,15 @@ exports.signup = async (payload) => {
     return { result: encodedRes.result, success: encodedRes.success };
   const signupToken = encodedRes.result;
 
+  const otp = otpGen();
+
   // send mail and jwt
   try {
-    const { result, success } = await sendVerificationMail(email, firstName);
-    if (!success) return { result, success };
+    //FIXME: email isse #01
+    // const { result, success } = await sendVerificationMail(email, firstName);
+    // if (!success) return { result, success };
 
-    return { result: { ...result, signupToken }, success: true };
+    return { result: { otp, signupToken }, success: true };
   } catch (error) {
     return { result: error.message, success: false };
   }

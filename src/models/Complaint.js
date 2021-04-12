@@ -72,16 +72,7 @@ const complaintSchema = new mongoose.Schema(
         content: String,
       },
     ],
-    media: [
-      {
-        uri: {
-          type: String,
-        },
-        type: {
-          type: String,
-        },
-      },
-    ],
+    media: String
   },
   { timestamps: true }
 );

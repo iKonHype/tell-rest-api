@@ -4,6 +4,7 @@
  */
 
 const Complaint = require("../models/Complaint");
+const User = require("../models/User");
 
 /**
  * Create a new complaint [User]
@@ -18,8 +19,8 @@ const Complaint = require("../models/Complaint");
  */
 exports.createNewComplaint = async (
   userId,
+  title,
   content,
-  category,
   location,
   landmark,
   media
@@ -29,15 +30,14 @@ exports.createNewComplaint = async (
       owner: userId,
       title,
       content,
-      category,
       location,
       landmark,
       media,
     });
 
-    const result = await complaint
-      .save()
-      .populate({ path: "owner", select: "email contact firstName" });
+    console.log("Complainttttttttt", complaint);
+
+    const result = await complaint.save();
     if (!result) return { result: null, success: false };
     console.log("Saving complaint populate user", result);
 
@@ -253,9 +253,14 @@ exports.getAllComplaintsByCategory = async (category) => {
  * @param {String} city
  * @returns {defaultReturnType}
  */
-exports.getAllComplaintsByCity = async (city) => {
+exports.getAllComplaintsByCity = async (userId) => {
   try {
-    const result = await Complaint.find({ city })
+    // const userRes = await User.findById(userId).select("location");
+
+    // const city = userRes.location.city;
+    // console.log("User City", city);
+
+    const result = await Complaint.find({ "location.city": city })
       .populate({
         path: "owner",
         select: "firstName lastName profImg",
@@ -263,8 +268,8 @@ exports.getAllComplaintsByCity = async (city) => {
       .populate({
         path: "comments.commentor",
         select: "firstName lastName profImg",
-      })
-      .populate("category");
+      });
+    // .populate("category");
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {

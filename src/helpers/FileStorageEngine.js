@@ -15,7 +15,7 @@ const storage = new GridFS({
       crypto.randomBytes(16, (err, buf) => {
         if (err) return rej(err);
         const filename =
-          "t-" + buf.toString("hex") + path.extname(file.originalname);
+          "tell-" + buf.toString("hex") + path.extname(file.originalname);
         const fileinfo = {
           filename,
           bucketName: "uploads",

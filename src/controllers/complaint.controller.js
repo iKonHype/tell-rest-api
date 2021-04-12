@@ -14,12 +14,12 @@ const { api } = require("../services/CommunicationService");
  * @returns {Response}
  */
 exports.createNewComplaintController = async (req, res) => {
-  const { userId, content, category, location, landmark, media } = req.body;
+  const { userId, title, content, category, location, landmark, media } = req.body;
   try {
     const { result, success } = await complaintService.createNewComplaint(
       userId,
+      title,
       content,
-      category,
       location,
       landmark,
       media
@@ -32,22 +32,7 @@ exports.createNewComplaintController = async (req, res) => {
       });
     }
 
-    const emailSubject = `Received New Complaint!`;
-
-    const emailBody = `<div><h1>Dear ${result.owner.firstName},</h1><p>Your complaint has been placed successfully. We will quickly take an action to resolve it</p><p>Title: ${result.title}<br />Id: tell-${result_id}</p><p>Thank you</p><p>Best Regards,<br/>tell</p></div>`;
-
-    const emailRes = await api.anyEmail(
-      result.owner.email,
-      emailSubject,
-      emailBody
-    );
-    if (!emailRes.success)
-      return res.status(400).json({
-        result: emailRes.result,
-        success: emailRes.success,
-        msg: "Sending Email failed",
-      });
-
+    //TODO: Sende email
     //TODO: Sending SMS
 
     return res.status(201).json({
@@ -319,7 +304,7 @@ exports.getComplaintsByCategoryController = async (req, res) => {
 exports.getAllComplaintsByCityController = async (req, res) => {
   try {
     const { result, success } = await complaintService.getAllComplaintsByCity(
-      req.query.q
+      req.params.userId
     );
     if (!success) {
       return res.status(400).json({

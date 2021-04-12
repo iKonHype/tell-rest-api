@@ -19,10 +19,12 @@ const baseRoute = "/.netlify/functions/api";
 const authRoute = require("./routes/auth.route");
 const complaintRoute = require("./routes/complaint.route");
 const profileRoute = require("./routes/profile.route");
+const transportRoute = require("./routes/transport.route");
 
 app.use(`${baseRoute}/auth`, authRoute);
 app.use(`${baseRoute}/complaints`, complaintRoute);
 app.use(`${baseRoute}/profile`, profileRoute);
+app.use(`${baseRoute}/file`, transportRoute);
 
 /** Unauthorized error handler */
 app.use(function (err, req, res, next) {

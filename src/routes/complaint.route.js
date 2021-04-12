@@ -136,7 +136,7 @@ router.get(
  * @example {base_url}/complaints/get/all/city?q=homagama
  */
 router.get(
-  "/get/all/city",
+  "/get/all/:userId",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   complaint.getAllComplaintsByCityController
