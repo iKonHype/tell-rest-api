@@ -61,7 +61,7 @@ router.patch(
  * @example {base_url}/complaints/get/admin
  */
 router.get(
-  "/get/admin",
+  "/get/admin/:userId",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAdmin,
