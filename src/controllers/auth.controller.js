@@ -107,21 +107,14 @@ exports.signinController = async (req, res) => {
  */
 exports.createAuthorityProfileController = async (req, res) => {
   try {
-    const {
-      authorityName,
-      username,
-      email,
-      password,
-      contact,
-      district,
-    } = req.body;
+    const { authorityName, username, email, password, contact } = req.body;
+    console.log("Req Body", req.body);
     const { result, success } = await authService.createAuthorityProfile(
       authorityName,
       username,
       email,
       password,
-      contact,
-      district
+      contact
     );
     if (!success) {
       return res.status(400).json({

@@ -44,14 +44,14 @@ router.delete(
 /**
  * Get authority profile [Authority]
  * @name get/pro-profile
- * @example {base_url}/profile/refresh
+ * @example {base_url}/profile/pro/123
  */
 router.get(
   "/pro/:userId",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAuthority,
-  profile.deleteUserProfileController
+  profile.getAuthorityProfileController
 );
 
 /**

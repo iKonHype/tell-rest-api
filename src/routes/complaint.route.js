@@ -61,7 +61,7 @@ router.patch(
  * @example {base_url}/complaints/get/admin
  */
 router.get(
-  "/get/admin/:userId",
+  "/get/all/admin",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAdmin,
@@ -71,10 +71,10 @@ router.get(
 /**
  * Get all complaints by status for admin [Admin]
  * @name get/allByStatusForAdmin
- * @example {base_url}/complaints/get/admin/status?q=processing
+ * @example {base_url}/complaints/get/admin?stat=processing&cat=garbage&auth=mc&date=none
  */
 router.get(
-  "/get/admin/status",
+  "/get/admin",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAdmin,

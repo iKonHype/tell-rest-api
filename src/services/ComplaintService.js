@@ -75,8 +75,8 @@ exports.updateComplaintStatus = async (
       {
         $set: { status: complaintState },
       },
-      { new: true }
-    ).populate({ path: "owner", select: "email contact firstName" });
+      { new: true })
+    // ).populate({ path: "owner", select: "contact firstName" });
 
     //TODO: send email throuh communication service
     //TODO: send SMS through communication service
@@ -332,9 +332,15 @@ exports.getAllComplaintsForAdmin = async () => {
  * @param {String} complaintState
  * @returns {defaultReturnType}
  */
-exports.getAllComplaintsByStatusForAdmin = async (complaintState) => {
+exports.getAllComplaintsByStatusForAdmin = async (query) => {
+  const { stat, cat, auth, date } = query;
+  console.log("Query", query);
   try {
-    const result = await Complaint.find({ status: complaintState })
+    const result = await Complaint.find({
+      status: stat,
+      createdAt: { $gte: date },
+    })
+      .sort({ createdAt: -1 })
       .populate({
         path: "owner",
         select: "firstName lastName profImg",
@@ -342,8 +348,8 @@ exports.getAllComplaintsByStatusForAdmin = async (complaintState) => {
       .populate({
         path: "comments.commentor",
         select: "firstName lastName profImg",
-      })
-      .populate("category");
+      });
+    // .populate("category");
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {

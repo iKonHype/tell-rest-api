@@ -45,7 +45,6 @@ router.post(
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAdmin,
-  checkpoint.isUsernameExist,
   auth.createAuthorityProfileController
 );
 

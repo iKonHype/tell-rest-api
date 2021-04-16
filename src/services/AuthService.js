@@ -167,8 +167,7 @@ exports.createAuthorityProfile = async (
   username,
   email,
   password,
-  contact,
-  district
+  contact
 ) => {
   try {
     const authority = new Authority({
@@ -177,8 +176,9 @@ exports.createAuthorityProfile = async (
       email,
       password,
       contact,
-      district,
     });
+
+    console.log("Authority model output", authority);
 
     const result = await authority.save();
     if (!result) return { result, success: false };

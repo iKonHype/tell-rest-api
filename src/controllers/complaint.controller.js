@@ -14,7 +14,15 @@ const { api } = require("../services/CommunicationService");
  * @returns {Response}
  */
 exports.createNewComplaintController = async (req, res) => {
-  const { userId, title, content, category, location, landmark, media } = req.body;
+  const {
+    userId,
+    title,
+    content,
+    category,
+    location,
+    landmark,
+    media,
+  } = req.body;
   try {
     const { result, success } = await complaintService.createNewComplaint(
       userId,
@@ -407,7 +415,7 @@ exports.getAllComplaintsByStatusForAdminController = async (req, res) => {
     const {
       result,
       success,
-    } = await complaintService.getAllComplaintsByStatusForAdmin(req.query.q);
+    } = await complaintService.getAllComplaintsByStatusForAdmin(req.query);
     if (!success) {
       return res.status(400).json({
         result,

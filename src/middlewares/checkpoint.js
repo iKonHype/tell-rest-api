@@ -46,7 +46,7 @@ exports.isUsernameExist = (req, res, next) => {
     .then((user) => {
       if (user)
         return res.status(422).json({
-          result: null,
+          result: user,
           success: false,
           msg: "User with this username already exists",
         });
@@ -83,7 +83,9 @@ exports.isSignedIn = expressJwt({
  */
 exports.isAuthenticated = (req, res, next) => {
   const isOwner =
-    (req.auth.id == req.body.userId || req.auth.id == req.params.userId) ??
+    (req.auth.role === 99 ||
+      req.auth.id == req.body.userId ||
+      req.auth.id == req.params.id) ??
     false;
   if (!isOwner) {
     return res.status(401).json({
