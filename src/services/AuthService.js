@@ -233,6 +233,23 @@ exports.authoritySignIn = async (username, password) => {
 
 //#region Common
 
+exports.resetPassword = async (payload) => {
+  const { userId, password } = payload;
+  try {
+    const authority = await Authority.findByIdAndUpdate(
+      userId,
+      {
+        $set: { password },
+      },
+      { new: true }
+    );
+    if (!authority) throw new Error("Password change failed");
+    return { result: "Password change success", success: true };
+  } catch (error) {
+    return { result: error.message, success: false };
+  }
+};
+
 /**
  * @description Refresh sign token
  * @param {Object} payload HTTP request body
@@ -259,4 +276,5 @@ exports.refresh = (payload) => {
 
   return { result: { signToken, refToken, id }, success: true };
 };
+
 //#endregion

@@ -73,7 +73,7 @@ const complaintSchema = new mongoose.Schema(
       },
     ],
     media: String,
-    reson: String,
+    reason: String,
   },
   { timestamps: true }
 );

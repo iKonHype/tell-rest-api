@@ -170,6 +170,29 @@ exports.signinAuthorityController = async (req, res) => {
 //#endregion
 
 //#region Common
+
+exports.resetPasswordController = async (req, res) => {
+  try {
+    const { result, success } = await authService.resetPassword(req.body);
+    if (!success)
+      return res
+        .status(400)
+        .json({ result, success, msg: "Password reset failed" });
+
+    return res.status(200).json({
+      result,
+      success,
+      msg: "Password reset success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      result,
+      success,
+      msg: "Internal server error @resetPasswordController",
+    });
+  }
+};
+
 /**
  * Send a new sign token and new refresh token
  * @param {HTTP} req

@@ -73,17 +73,27 @@ exports.updateComplaintStatus = async (
   reason = reason ?? "Reason is not defined";
   console.log("Body got", { userId, complaintId, complaintState, reason });
   try {
+    if (complaintState === "closed") {
+      console.log("Sending confirmation email and sms");
+      const result = await Complaint.findById(complaintId)
+        .select("owner title")
+        .populate({
+          path: "owner",
+          select: "email contact firstName",
+        });
+      //TODO: send email throuh communication service
+      //TODO: send SMS through communication service
+      return { result, success: true };
+    }
+
     const result = await Complaint.findByIdAndUpdate(
       complaintId,
       {
         $set: { status: complaintState },
       },
       { new: true }
-    );
-    // ).populate({ path: "owner", select: "contact firstName" });
+    ).populate({ path: "owner", select: "email contact firstName" });
 
-    //TODO: send email throuh communication service
-    //TODO: send SMS through communication service
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {

@@ -56,6 +56,8 @@ router.post(
 router.post("/pro/signin", auth.signinAuthorityController);
 //#endregion
 
+router.patch("/pro/reset-password", auth.resetPasswordController);
+
 /**
  * refresh token
  * @name post/refresh
