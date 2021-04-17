@@ -5,6 +5,8 @@
 
 const Complaint = require("../models/Complaint");
 const User = require("../models/User");
+const Authority = require("../models/Authority");
+const Category = require("../models/Category");
 
 /**
  * Create a new complaint [User]
@@ -59,7 +61,7 @@ exports.createNewComplaint = async (
  * @async
  * @param {objectId} userId Admin or Authority
  * @param {objectId} complaintId
- * @param {string} complaintState ['open'|'accepted'|'rejected'|'processing'|'done'|'confirmed']
+ * @param {string} complaintState ['open'|'accepted'|'rejected'|'processing'|'closed']
  * @returns {defaultReturnType}
  */
 exports.updateComplaintStatus = async (
@@ -163,7 +165,7 @@ exports.confirmProgressDone = async (userId, complaintId) => {
     const result = await Complaint.findOneAndUpdate(
       { owner: userId, _id: complaintId },
       {
-        $set: { status: "confirmed" },
+        $set: { status: "closed" },
       },
       { new: true }
     );
@@ -337,11 +339,22 @@ exports.getAllComplaintsForAdmin = async () => {
 exports.getAllComplaintsByStatusForAdmin = async (query) => {
   const { stat, cat, auth, date } = query;
   console.log("Query", query);
+  let result = [];
+
   try {
-    const result = await Complaint.find({
-      status: stat,
-      createdAt: { $gte: date },
-    })
+    let filter =
+      cat === "all"
+        ? {
+            status: stat,
+            createdAt: { $gte: date },
+          }
+        : {
+            status: stat,
+            createdAt: { $gte: date },
+            category: cat,
+          };
+
+    result = await Complaint.find(filter)
       .sort({ createdAt: -1 })
       .populate({
         path: "owner",
@@ -350,8 +363,9 @@ exports.getAllComplaintsByStatusForAdmin = async (query) => {
       .populate({
         path: "comments.commentor",
         select: "firstName lastName profImg",
-      });
-    // .populate("category");
+      })
+      .populate("category");
+
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -403,6 +417,26 @@ exports.deleteComplaint = async (complaintId) => {
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
+    return { result: error.message, success: false };
+  }
+};
+
+exports.getCategoriesAndAuthorities = async () => {
+  try {
+    const categories = await Category.find().select("title").sort({ title: 1 });
+    const authorities = await Authority.find({ role: 49 })
+      .select("authorityName")
+      .sort({ authorityName: 1 });
+
+    console.log("result bambam", { categories, authorities });
+    if (!(authorities && categories))
+      return {
+        result: { categories: null, authorities: null },
+        success: false,
+      };
+    return { result: { categories, authorities }, success: true };
+  } catch (error) {
+    console.log("Erro while loading cat auth", error);
     return { result: error.message, success: false };
   }
 };

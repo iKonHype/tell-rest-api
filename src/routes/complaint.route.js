@@ -168,6 +168,13 @@ router.get(
 );
 
 /**
+ * Get categories and authorities [*]
+ * @name get/categories-and-authorities
+ * @example {base_url}/complaints/meta
+ */
+router.get("/meta", complaint.getCategoriesAndAuthoritiesController);
+
+/**
  * Delete a complaint [Admin|User]
  * @name delete/complaint
  * @example {base_url}/complaints/rm/123

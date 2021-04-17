@@ -507,3 +507,37 @@ exports.deleteComplaitByIdController = async (req, res) => {
     });
   }
 };
+
+/**
+ * Get categories and authorities
+ * @async
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
+exports.getCategoriesAndAuthoritiesController = async (req, res) => {
+  try {
+    const {
+      result,
+      success,
+    } = await complaintService.getCategoriesAndAuthorities();
+    if (!success) {
+      return res.status(400).json({
+        result,
+        success,
+        msg: "Fetching categories and authorities failed",
+      });
+    }
+    return res.status(200).json({
+      result,
+      success,
+      msg: "Fetching categories and authorities success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Internal server error @getCategoriesAndAuthoritiesController",
+      err: error.message,
+      success: false,
+    });
+  }
+};
