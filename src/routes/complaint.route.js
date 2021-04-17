@@ -173,6 +173,7 @@ router.get(
  * @example {base_url}/complaints/meta
  */
 router.get("/meta", complaint.getCategoriesAndAuthoritiesController);
+router.get("/report", complaint.getReportController);
 
 /**
  * Delete a complaint [Admin|User]

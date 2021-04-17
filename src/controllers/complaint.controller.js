@@ -541,3 +541,27 @@ exports.getCategoriesAndAuthoritiesController = async (req, res) => {
     });
   }
 };
+
+exports.getReportController = async (req, res) => {
+  try {
+    const { result, success } = await complaintService.getReport();
+    if (!success) {
+      return res.status(400).json({
+        result,
+        success,
+        msg: "Fetching report failed",
+      });
+    }
+    return res.status(200).json({
+      result,
+      success,
+      msg: "Fetching report success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Internal server error @getReportController",
+      err: error.message,
+      success: false,
+    });
+  }
+};

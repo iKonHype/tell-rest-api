@@ -343,15 +343,28 @@ exports.getAllComplaintsByStatusForAdmin = async (query) => {
 
   try {
     let filter =
-      cat === "all"
+      cat === "all" && auth === "all"
         ? {
             status: stat,
             createdAt: { $gte: date },
+          }
+        : cat !== "all" && auth === "all"
+        ? {
+            status: stat,
+            createdAt: { $gte: date },
+            category: cat,
+          }
+        : cat === "all" && auth !== "all"
+        ? {
+            status: stat,
+            createdAt: { $gte: date },
+            authority: auth,
           }
         : {
             status: stat,
             createdAt: { $gte: date },
             category: cat,
+            authority: auth,
           };
 
     result = await Complaint.find(filter)
@@ -364,7 +377,11 @@ exports.getAllComplaintsByStatusForAdmin = async (query) => {
         path: "comments.commentor",
         select: "firstName lastName profImg",
       })
-      .populate("category");
+      .populate("category")
+      .populate({
+        path: "authority",
+        select: "authorityName",
+      });
 
     if (!result) return { result, success: false };
     return { result, success: true };
@@ -435,6 +452,24 @@ exports.getCategoriesAndAuthorities = async () => {
         success: false,
       };
     return { result: { categories, authorities }, success: true };
+  } catch (error) {
+    console.log("Erro while loading cat auth", error);
+    return { result: error.message, success: false };
+  }
+};
+
+exports.getReport = async () => {
+  try {
+    const totalCases = await Complaint.countDocuments();
+    const pendingCases = await Complaint.countDocuments({
+      status: { $in: ["open", "accepted", "processing"] },
+    });
+    const solvedCases = await Complaint.countDocuments({
+      status: "closed",
+    });
+
+    console.log("result bambam", { totalCases, pendingCases, solvedCases });
+    return { result: { totalCases, pendingCases, solvedCases }, success: true };
   } catch (error) {
     console.log("Erro while loading cat auth", error);
     return { result: error.message, success: false };
