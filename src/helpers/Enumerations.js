@@ -7,6 +7,5 @@ exports.status = {
   accepted: "accepted",
   rejected: "rejected",
   processing: "processing",
-  done: "done",
-  confirmed: "confirmed",
+  closed: "closed",
 };

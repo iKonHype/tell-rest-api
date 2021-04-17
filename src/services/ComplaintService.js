@@ -69,13 +69,15 @@ exports.updateComplaintStatus = async (
   reason
 ) => {
   reason = reason ?? "Reason is not defined";
+  console.log("Body got", { userId, complaintId, complaintState, reason });
   try {
-    const result = await Complaint.findOneAndUpdate(
-      { authority: userId, _id: complaintId },
+    const result = await Complaint.findByIdAndUpdate(
+      complaintId,
       {
         $set: { status: complaintState },
       },
-      { new: true })
+      { new: true }
+    );
     // ).populate({ path: "owner", select: "contact firstName" });
 
     //TODO: send email throuh communication service
