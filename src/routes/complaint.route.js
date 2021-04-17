@@ -78,20 +78,20 @@ router.get(
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAdmin,
-  complaint.getAllComplaintsByStatusForAdminController
+  complaint.getAllComplaintsByFilterController
 );
 
 /**
  * Get all complaints by status for authority [Authority]
  * @name get/allByStatusForAuthority
- * @example {base_url}/complaints/get/authority/123?state=open
+ * @example {base_url}/complaints/get/authority?stat=processing&cat=garbage&auth=mc&date=none
  */
 router.get(
-  "/get/authority/:authorityId",
+  "/get/authority",
   checkpoint.isSignedIn,
   checkpoint.isAuthenticated,
   checkpoint.isAuthority,
-  complaint.getAllComplaintsByStatusForAuthorityController
+  complaint.getAllComplaintsByFilterController
 );
 
 /**

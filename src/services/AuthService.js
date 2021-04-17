@@ -219,6 +219,7 @@ exports.authoritySignIn = async (username, password) => {
       result: {
         id: authority._id,
         role: authority.role,
+        name: authority.authorityName,
         signToken,
         refToken,
       },

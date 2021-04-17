@@ -84,6 +84,7 @@ exports.isSignedIn = expressJwt({
 exports.isAuthenticated = (req, res, next) => {
   const isOwner =
     (req.auth.role === 99 ||
+      req.auth.role === 49 ||
       req.auth.id == req.body.userId ||
       req.auth.id == req.params.id) ??
     false;

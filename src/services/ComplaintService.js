@@ -336,7 +336,7 @@ exports.getAllComplaintsForAdmin = async () => {
  * @param {String} complaintState
  * @returns {defaultReturnType}
  */
-exports.getAllComplaintsByStatusForAdmin = async (query) => {
+exports.getAllComplaintsByFilter = async (query) => {
   const { stat, cat, auth, date } = query;
   console.log("Query", query);
   let result = [];

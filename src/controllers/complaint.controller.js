@@ -410,12 +410,12 @@ exports.getAllComplaintsForAdminController = async (req, res) => {
  * @param {HTTP} res
  * @returns {Response}
  */
-exports.getAllComplaintsByStatusForAdminController = async (req, res) => {
+exports.getAllComplaintsByFilterController = async (req, res) => {
   try {
     const {
       result,
       success,
-    } = await complaintService.getAllComplaintsByStatusForAdmin(req.query);
+    } = await complaintService.getAllComplaintsByFilter(req.query);
     if (!success) {
       return res.status(400).json({
         result,
