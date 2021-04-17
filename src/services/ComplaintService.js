@@ -381,7 +381,7 @@ exports.getAllComplaintsByFilter = async (query) => {
       .sort({ createdAt: -1 })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName profImg contact",
       })
       .populate({
         path: "comments.commentor",
