@@ -269,10 +269,10 @@ exports.getAllComplaintsByCategory = async (category) => {
  */
 exports.getAllComplaintsByCity = async (userId) => {
   try {
-    // const userRes = await User.findById(userId).select("location");
+    const userRes = await User.findById(userId).select("address");
 
-    // const city = userRes.location.city;
-    // console.log("User City", city);
+    const city = userRes.address.city.toLowerCase();
+    console.log("User City", city);
 
     const result = await Complaint.find({ "location.city": city })
       .populate({
@@ -282,8 +282,9 @@ exports.getAllComplaintsByCity = async (userId) => {
       .populate({
         path: "comments.commentor",
         select: "firstName lastName profImg",
-      });
-    // .populate("category");
+      })
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {

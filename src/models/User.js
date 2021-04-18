@@ -36,20 +36,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    gender: {
-      type: String,
-      trim: true,
-    },
-    birthdate: {
-      type: Date,
-    },
     profImg: {
       type: String,
     },
     contact: {
-      type: String,
-    },
-    occupation: {
       type: String,
     },
     address: {

@@ -29,12 +29,13 @@ const {
  * @returns {defaultReturnType} The encoded JWT signup token
  */
 exports.signup = async (payload) => {
-  const { firstName, lastName, contact, email, password } = payload;
+  const { firstName, lastName, contact, address, email, password } = payload;
 
   // encode user input in a jwt
   const JWTPayload = {
     firstName,
     lastName,
+    address,
     contact: encrypt(contact),
     email: encrypt(email),
     password: encrypt(password),
@@ -71,16 +72,26 @@ exports.activate = async (payload) => {
   const verifyRes = verifyJWT(signupToken); // <- decode signup token
   if (!verifyRes.success)
     return { result: verifyRes.result, success: verifyRes.success };
-  const { firstName, lastName, contact, email, password } = verifyRes.result;
+  const {
+    firstName,
+    lastName,
+    address,
+    contact,
+    email,
+    password,
+  } = verifyRes.result;
 
   // save user into db
   const user = new User({
     firstName,
     lastName,
+    address,
     contact: decrypt(contact),
     email: decrypt(email),
     password: decrypt(password),
   });
+
+  console.log("i think so", user);
 
   try {
     const newUser = await user.save();

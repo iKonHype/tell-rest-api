@@ -86,7 +86,7 @@ exports.isAuthenticated = (req, res, next) => {
     (req.auth.role === 99 ||
       req.auth.role === 49 ||
       req.auth.id == req.body.userId ||
-      req.auth.id == req.params.id) ??
+      req.auth.id == req.params.userId) ??
     false;
   if (!isOwner) {
     return res.status(401).json({
