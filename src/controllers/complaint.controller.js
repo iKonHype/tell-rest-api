@@ -19,6 +19,7 @@ exports.createNewComplaintController = async (req, res) => {
     title,
     content,
     category,
+    authority,
     location,
     landmark,
     media,
@@ -28,6 +29,8 @@ exports.createNewComplaintController = async (req, res) => {
       userId,
       title,
       content,
+      category,
+      authority,
       location,
       landmark,
       media
@@ -412,10 +415,9 @@ exports.getAllComplaintsForAdminController = async (req, res) => {
  */
 exports.getAllComplaintsByFilterController = async (req, res) => {
   try {
-    const {
-      result,
-      success,
-    } = await complaintService.getAllComplaintsByFilter(req.query);
+    const { result, success } = await complaintService.getAllComplaintsByFilter(
+      req.query
+    );
     if (!success) {
       return res.status(400).json({
         result,

@@ -23,6 +23,8 @@ exports.createNewComplaint = async (
   userId,
   title,
   content,
+  category,
+  authority,
   location,
   landmark,
   media
@@ -35,9 +37,11 @@ exports.createNewComplaint = async (
       location,
       landmark,
       media,
+      category,
+      authority,
     });
 
-    console.log("Complainttttttttt", complaint);
+    console.log("Complaint", complaint);
 
     const result = await complaint.save();
     if (!result) return { result: null, success: false };
@@ -220,6 +224,7 @@ exports.getComplaintById = async (complaintId) => {
 exports.getComplaintsByOwner = async (userId) => {
   try {
     const result = await Complaint.find({ owner: userId })
+      .sort({ updatedAt: -1 })
       .populate({
         path: "owner",
         select: "firstName lastName profImg",
@@ -228,7 +233,8 @@ exports.getComplaintsByOwner = async (userId) => {
         path: "comments.commentor",
         select: "firstName lastName profImg",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -275,6 +281,7 @@ exports.getAllComplaintsByCity = async (userId) => {
     console.log("User City", city);
 
     const result = await Complaint.find({ "location.city": city })
+      .sort({ createdAt: -1 })
       .populate({
         path: "owner",
         select: "firstName lastName profImg",
