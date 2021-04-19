@@ -56,6 +56,11 @@ router.post(
 router.post("/pro/signin", auth.signinAuthorityController);
 //#endregion
 
+/**
+ * reset password [Admin|Authority]
+ * @name patch/reset-password
+ * @example {base_url}/auth/reset-password
+ */
 router.patch("/pro/reset-password", auth.resetPasswordController);
 
 /**

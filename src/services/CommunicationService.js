@@ -3,17 +3,7 @@
  * @requires module:helpers/generateOTP
  */
 
-const generateOTP = require("../helpers/generateOTP");
-const axios = require("axios");
 
-axios.default({
-  baseURL: "https://us-central1-sewa-5df00.cloudfunctions.net/app",
-  timeout: 10000,
-  timeoutErrorMessage:
-    "Request timeout! Please check your internet connection...",
-});
-
-exports.api = {
   // anyEmail: (email, subject, body) =>
   //   axios.post("/email/send", {
   //     userEmail: email,
@@ -42,4 +32,4 @@ exports.api = {
   //     complaintTitle,
   //     link,
   //   }),
-};
+// };

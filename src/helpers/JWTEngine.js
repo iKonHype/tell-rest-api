@@ -11,8 +11,8 @@ const jwt = require("jsonwebtoken");
 const signJWT = (payload) => {
   try {
     const token = jwt.sign(payload, process.env.SIGN_TOKEN_SECRET, {
-      expiresIn: "5m",
-      issuer: "tell.com",
+      expiresIn: "10m",
+      issuer: "tell-lk.com",
     });
     if (!token)
       throw new Error("Something went wrong inside JWT engine when sign");
@@ -30,7 +30,7 @@ const refreshJWT = (payload) => {
   try {
     const token = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: "1y",
-      issuer: "tell.com",
+      issuer: "tell-lk.com",
     });
     if (!token)
       throw new Error("Something went wrong inside JWT engine when refresh");
@@ -47,7 +47,7 @@ const refreshJWT = (payload) => {
 const encodeJWT = (payload) => {
   try {
     const token = jwt.sign(payload, process.env.SIGN_TOKEN_SECRET, {
-      issuer: "tell.com",
+      issuer: "tell-lk.com",
     });
     if (!token)
       throw new Error("Something went wrong inside JWT engine when encode");

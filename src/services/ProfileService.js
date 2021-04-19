@@ -27,7 +27,6 @@ exports.updateUserProfile = async (payload) => {
       { new: true }
     );
     if (!result) return { result, success: false };
-
     return { result, success: true };
   } catch (error) {
     return { result: error.message, success: false };

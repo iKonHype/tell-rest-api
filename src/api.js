@@ -1,5 +1,4 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const serverless = require("serverless-http");
 
@@ -12,7 +11,6 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(cors());
 
 const baseRoute = "/.netlify/functions/api";
@@ -48,7 +46,7 @@ app.all("*", (req, res) => {
 // const PORT = process.env.PORT ?? 8000;
 // app.listen(PORT, () =>
 //   console.log(
-//     `⚡ [server] Server is running on ${PORT} in ${process.env.NODE_ENV} mode`
+//     `[server] Server is running on ${PORT} in ${process.env.NODE_ENV} mode`
 //   )
 // );
 

@@ -108,7 +108,6 @@ exports.signinController = async (req, res) => {
 exports.createAuthorityProfileController = async (req, res) => {
   try {
     const { authorityName, username, email, password, contact } = req.body;
-    console.log("Req Body", req.body);
     const { result, success } = await authService.createAuthorityProfile(
       authorityName,
       username,
@@ -171,6 +170,12 @@ exports.signinAuthorityController = async (req, res) => {
 
 //#region Common
 
+/**
+ * Reset password for authority and admin
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
 exports.resetPasswordController = async (req, res) => {
   try {
     const { result, success } = await authService.resetPassword(req.body);

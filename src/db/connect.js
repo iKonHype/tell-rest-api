@@ -8,20 +8,41 @@ mongoose
     useUnifiedTopology: true,
     useFindAndModify: false,
   })
-  .then(() =>
-    console.log(`🟢 [database] DB connected in ${process.env.NODE_ENV} mode`)
-  )
+  .then(() => {
+    // init GridFS stream
+    global.gfs = Grid(mongoose.connection.db, mongoose.mongo);
+    global.gfs.collection("uploads");
+
+    // init GridFS Bucket
+    global.gfsBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+      bucketName: "uploads",
+    });
+
+    console.log(`🟢 [database] DB connected in ${process.env.NODE_ENV} mode`);
+  })
   .catch((err) =>
     console.log(`🔴 DB connection faild in ${process.env.NODE_ENV} mode\n`, err)
   );
 
-mongoose.connection.once("open", () => {
-  // init GridFS stream
-  global.gfs = Grid(mongoose.connection.db, mongoose.mongo);
-  global.gfs.collection("uploads");
+// var db = mongoose.connection;
 
-  // init GridFS Bucket
-  global.gfsBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-    bucketName: "uploads",
-  });
-});
+// db.on(
+//   "error",
+//   console.error.bind(
+//     console,
+//     `DB connection faild in ${process.env.NODE_ENV} mode\n`
+//   )
+// );
+
+// db.once("open", () => {
+//   // init GridFS stream
+//   global.gfs = Grid(mongoose.connection.db, mongoose.mongo);
+//   global.gfs.collection("uploads");
+
+//   // init GridFS Bucket
+//   global.gfsBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+//     bucketName: "uploads",
+//   });
+
+//   console.log(`[database] DB connected in ${process.env.NODE_ENV} mode`);
+// });

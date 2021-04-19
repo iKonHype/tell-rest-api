@@ -41,11 +41,8 @@ exports.createNewComplaint = async (
       authority,
     });
 
-    console.log("Complaint", complaint);
-
     const result = await complaint.save();
     if (!result) return { result: null, success: false };
-    console.log("Saving complaint populate user", result);
 
     const saveComplaintsInUser = await User.findByIdAndUpdate(
       userId,
@@ -53,6 +50,9 @@ exports.createNewComplaint = async (
       { new: true }
     );
     if (!saveComplaintsInUser) return { result: null, success: false };
+
+    //TODO: Send complaint placement email
+    //TODO: Send complaint placement sms
 
     return { result, success: true };
   } catch (error) {
@@ -78,15 +78,17 @@ exports.updateComplaintStatus = async (
   console.log("Body got", { userId, complaintId, complaintState, reason });
   try {
     if (complaintState === "closed") {
-      console.log("Sending confirmation email and sms");
       const result = await Complaint.findById(complaintId)
         .select("owner title")
         .populate({
           path: "owner",
           select: "email contact firstName",
         });
-      //TODO: send email throuh communication service
-      //TODO: send SMS through communication service
+      if (!result) return { result: null, success: false };
+
+      //TODO: Complaint confirmation email [user action]
+      //TODO: Complaint confirmation sms [user action]
+
       return { result, success: true };
     }
 
@@ -97,8 +99,11 @@ exports.updateComplaintStatus = async (
       },
       { new: true }
     ).populate({ path: "owner", select: "email contact firstName" });
-
     if (!result) return { result, success: false };
+
+    //TODO: Complaint status change email
+    //TODO: Complaint status change sms
+
     return { result, success: true };
   } catch (error) {
     return { result: error.message, success: false };
@@ -201,13 +206,14 @@ exports.getComplaintById = async (complaintId) => {
     const result = await Complaint.findById(complaintId)
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName contact",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -227,11 +233,11 @@ exports.getComplaintsByOwner = async (userId) => {
       .sort({ updatedAt: -1 })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
       .populate("category")
       .populate({ path: "authority", select: "authorityName" });
@@ -253,13 +259,14 @@ exports.getAllComplaintsByCategory = async (category) => {
     const result = await Complaint.find({ category })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName ",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -270,7 +277,7 @@ exports.getAllComplaintsByCategory = async (category) => {
 /**
  * Get all complaints by its city [User]
  * @async
- * @param {String} city
+ * @param {String} userId
  * @returns {defaultReturnType}
  */
 exports.getAllComplaintsByCity = async (userId) => {
@@ -278,17 +285,16 @@ exports.getAllComplaintsByCity = async (userId) => {
     const userRes = await User.findById(userId).select("address");
 
     const city = userRes.address.city.toLowerCase();
-    console.log("User City", city);
 
     const result = await Complaint.find({ "location.city": city })
       .sort({ createdAt: -1 })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName ",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
       .populate("category")
       .populate({ path: "authority", select: "authorityName" });
@@ -310,13 +316,14 @@ exports.getAllComplaintsByDistrict = async (district) => {
     const result = await Complaint.find({ district })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -334,13 +341,14 @@ exports.getAllComplaintsForAdmin = async () => {
     const result = await Complaint.find()
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName contact",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -351,12 +359,11 @@ exports.getAllComplaintsForAdmin = async () => {
 /**
  * Get all complaints by status
  * @async
- * @param {String} complaintState
+ * @param {object} query
  * @returns {defaultReturnType}
  */
 exports.getAllComplaintsByFilter = async (query) => {
   const { stat, cat, auth, date } = query;
-  console.log("Query", query);
   let result = [];
 
   try {
@@ -389,11 +396,11 @@ exports.getAllComplaintsByFilter = async (query) => {
       .sort({ createdAt: -1 })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg contact",
+        select: "firstName lastName contact",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
       .populate("category")
       .populate({
@@ -426,13 +433,14 @@ exports.getAllComplaintsByStatusForAuthority = async (
     })
       .populate({
         path: "owner",
-        select: "firstName lastName profImg",
+        select: "firstName lastName contact",
       })
       .populate({
         path: "comments.commentor",
-        select: "firstName lastName profImg",
+        select: "firstName lastName",
       })
-      .populate("category");
+      .populate("category")
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
     return { result, success: true };
   } catch (error) {
@@ -456,6 +464,11 @@ exports.deleteComplaint = async (complaintId) => {
   }
 };
 
+/**
+ * Get all categories and authorities [Admin|Authority]
+ * @async
+ * @returns {defaultReturnType}
+ */
 exports.getCategoriesAndAuthorities = async () => {
   try {
     const categories = await Category.find().select("title").sort({ title: 1 });
@@ -463,7 +476,6 @@ exports.getCategoriesAndAuthorities = async () => {
       .select("authorityName")
       .sort({ authorityName: 1 });
 
-    console.log("result bambam", { categories, authorities });
     if (!(authorities && categories))
       return {
         result: { categories: null, authorities: null },
@@ -476,6 +488,11 @@ exports.getCategoriesAndAuthorities = async () => {
   }
 };
 
+/**
+ * Get all report [*]
+ * @async
+ * @returns {defaultReturnType}
+ */
 exports.getReport = async () => {
   try {
     const totalCases = await Complaint.countDocuments();
@@ -486,10 +503,9 @@ exports.getReport = async () => {
       status: "closed",
     });
 
-    console.log("result bambam", { totalCases, pendingCases, solvedCases });
     return { result: { totalCases, pendingCases, solvedCases }, success: true };
   } catch (error) {
-    console.log("Erro while loading cat auth", error);
+    console.log("Error while loading cat auth", error);
     return { result: error.message, success: false };
   }
 };

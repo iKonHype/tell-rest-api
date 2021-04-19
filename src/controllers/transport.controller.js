@@ -1,3 +1,9 @@
+/**
+ * doenload Image
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
 const downloadImage = (req, res) => {
   global.gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
     if (!file || file.length === 0)
@@ -22,6 +28,12 @@ const downloadImage = (req, res) => {
   });
 };
 
+/**
+ * Upload Image
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
 const uploadImage = (req, res) => {
   try {
     if (!req.file)

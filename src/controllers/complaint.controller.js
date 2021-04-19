@@ -4,7 +4,6 @@
  */
 
 const complaintService = require("../services/ComplaintService");
-const { api } = require("../services/CommunicationService");
 
 /**
  * Create a new complaint by the user
@@ -43,9 +42,6 @@ exports.createNewComplaintController = async (req, res) => {
       });
     }
 
-    //TODO: Sende email
-    //TODO: Sending SMS
-
     return res.status(201).json({
       result,
       success,
@@ -83,7 +79,7 @@ exports.updateComplaintStatusController = async (req, res) => {
         msg: "Update complaint status failed",
       });
     }
-    return res.status(201).json({
+    return res.status(200).json({
       result,
       success,
       msg: "Update complaint status success",
@@ -119,7 +115,7 @@ exports.commentOnComplaintController = async (req, res) => {
         msg: "Comment on complaint failed",
       });
     }
-    return res.status(201).json({
+    return res.status(200).json({
       result,
       success,
       msg: "Comment on complaint success",
@@ -154,7 +150,7 @@ exports.upvoteComplaintController = async (req, res) => {
         msg: "Upvote complaint failed",
       });
     }
-    return res.status(201).json({
+    return res.status(200).json({
       result,
       success,
       msg: "Upvote complaint success",
@@ -189,7 +185,7 @@ exports.confirmProgressDoneController = async (req, res) => {
         msg: "Comfirm progress as done failed",
       });
     }
-    return res.status(201).json({
+    return res.status(200).json({
       result,
       success,
       msg: "Comfirm progress as done success",
@@ -544,6 +540,13 @@ exports.getCategoriesAndAuthoritiesController = async (req, res) => {
   }
 };
 
+/**
+ * Get report
+ * @async
+ * @param {HTTP} req
+ * @param {HTTP} res
+ * @returns {Response}
+ */
 exports.getReportController = async (req, res) => {
   try {
     const { result, success } = await complaintService.getReport();

@@ -9,7 +9,6 @@
 
 const User = require("../models/User");
 const Authority = require("../models/Authority");
-const { sendVerificationMail } = require("../services/CommunicationService");
 const { encrypt, decrypt } = require("../helpers/cipherEngine");
 const otpGen = require("../helpers/generateOTP");
 const {
@@ -48,11 +47,9 @@ exports.signup = async (payload) => {
 
   const otp = otpGen();
 
-  // send mail and jwt
   try {
-    //FIXME: email isse #01
-    // const { result, success } = await sendVerificationMail(email, firstName);
-    // if (!success) return { result, success };
+    //TODO: send otp code in the email
+    //TODO: send otp code in the sms
 
     return { result: { otp, signupToken }, success: true };
   } catch (error) {
@@ -90,8 +87,6 @@ exports.activate = async (payload) => {
     email: decrypt(email),
     password: decrypt(password),
   });
-
-  console.log("i think so", user);
 
   try {
     const newUser = await user.save();
@@ -189,12 +184,13 @@ exports.createAuthorityProfile = async (
       contact,
     });
 
-    console.log("Authority model output", authority);
-
     const result = await authority.save();
     if (!result) return { result, success: false };
     result.encry_password = undefined;
     result.salt = undefined;
+
+    //TODO: Send authority created email
+
     return { result, success: true };
   } catch (error) {
     return { result: error.message, success: false };
@@ -244,6 +240,11 @@ exports.authoritySignIn = async (username, password) => {
 
 //#region Common
 
+/**
+ * Authoritty password reset [Authority]
+ * @param {object} payload
+ * @returns Success string
+ */
 exports.resetPassword = async (payload) => {
   const { userId, password } = payload;
   try {

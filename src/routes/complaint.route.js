@@ -173,6 +173,12 @@ router.get(
  * @example {base_url}/complaints/meta
  */
 router.get("/meta", complaint.getCategoriesAndAuthoritiesController);
+
+/**
+ * Get report [*]
+ * @name get/report
+ * @example {base_url}/complaints/report
+ */
 router.get("/report", complaint.getReportController);
 
 /**
@@ -186,25 +192,5 @@ router.delete(
   checkpoint.isAuthenticated,
   complaint.deleteComplaitByIdController
 );
-
-// router.post("/testmail", async (req, res) => {
-//   try {
-//     const emailBody = {
-//       userEmail: "alwiskaveen@gmail.com",
-//       userFirstName: "Kaveen",
-//       complaintID: "6bf334567y778",
-//       complaintTitle: "කුනු අයින් කරපන් යකෝ...",
-//     };
-//     const { result, success } = await acceptEmail(
-//       emailBody.userEmail,
-//       emailBody.userFirstName,
-//       emailBody.complaintID,
-//       emailBody.complaintTitle
-//     );
-//     res.status(200).json({ result, success, msg: "කුනු අයින් කරපන් යකෝ" });
-//   } catch (error) {
-//     res.status(500).json("කුනු අයින් කරපන් යකෝ");
-//   }
-// });
 
 module.exports = router;
