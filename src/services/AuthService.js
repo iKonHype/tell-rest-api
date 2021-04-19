@@ -201,7 +201,6 @@ exports.createAuthorityProfile = async (
         responseType: "json",
       }
     );
-    console.log("email body", body);
 
     if (!body.data.success)
       return { result, success: true, info: "email not sent" };

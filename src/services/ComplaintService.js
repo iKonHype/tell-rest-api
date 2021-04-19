@@ -63,7 +63,6 @@ exports.createNewComplaint = async (
         responseType: "json",
       }
     );
-    console.log("email body", body);
 
     if (!body.data.success)
       return { result, success: true, info: "email not sent" };
@@ -88,7 +87,6 @@ exports.updateComplaintStatus = async (
   complaintState,
   reason
 ) => {
-  reason = reason ?? "Reason is not defined";
   try {
     if (complaintState === "closed") {
       const result = await Complaint.findById(complaintId)
@@ -112,7 +110,6 @@ exports.updateComplaintStatus = async (
           responseType: "json",
         }
       );
-      console.log("email body", body);
 
       if (!body.data.success)
         return { result, success: true, info: "email not sent" };
@@ -123,7 +120,7 @@ exports.updateComplaintStatus = async (
     const result = await Complaint.findByIdAndUpdate(
       complaintId,
       {
-        $set: { status: complaintState },
+        $set: { status: complaintState, reason },
       },
       { new: true }
     )
@@ -141,7 +138,7 @@ exports.updateComplaintStatus = async (
             result.authority.authorityName
           } has mark your complaint as ${result.status.toUpperCase()} ${
             result.status === "rejected"
-              ? `mentioning the reason as "${result.reason}"`
+              ? `mentioning the reason as "${reason}"`
               : ""
           }.</h2><h3>Complaint Title: ${result.title}<br/>Complaint Id: tell-${
             result._id
@@ -150,7 +147,6 @@ exports.updateComplaintStatus = async (
         responseType: "json",
       }
     );
-    console.log("email body", body);
 
     if (!body.data.success)
       return { result, success: true, info: "email not sent" };
@@ -540,7 +536,6 @@ exports.getCategoriesAndAuthorities = async () => {
       };
     return { result: { categories, authorities }, success: true };
   } catch (error) {
-    console.log("Erro while loading cat auth", error);
     return { result: error.message, success: false };
   }
 };
@@ -562,7 +557,6 @@ exports.getReport = async () => {
 
     return { result: { totalCases, pendingCases, solvedCases }, success: true };
   } catch (error) {
-    console.log("Error while loading cat auth", error);
     return { result: error.message, success: false };
   }
 };
