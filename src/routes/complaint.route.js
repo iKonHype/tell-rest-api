@@ -162,8 +162,6 @@ router.get(
  */
 router.get(
   "/confirm/:userId/:complaintId",
-  checkpoint.isSignedIn,
-  checkpoint.isAuthenticated,
   complaint.confirmProgressDoneController
 );
 

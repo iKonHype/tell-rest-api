@@ -143,8 +143,8 @@ exports.updateComplaintStatus = async (
             result.status === "rejected"
               ? `mentioning the reason as "${result.reason}"`
               : ""
-          }.</h2><h3>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
-            result.title
+          }.</h2><h3>Complaint Title: ${result.title}<br/>Complaint Id: tell-${
+            result._id
           }</h3><h3>Thank you.</h3><h4>Best Regards<br/>Customer Support Team<br/>Tell Inc</h4>`,
         },
         responseType: "json",
@@ -240,7 +240,13 @@ exports.confirmProgressDone = async (userId, complaintId) => {
       { new: true }
     );
     if (!result) return { result, success: false };
-    return { result, success: true };
+    return {
+      result: {
+        complaintTitle: result.title,
+        complaintId: `tell-${result._id}`,
+      },
+      success: true,
+    };
   } catch (error) {
     return { result: error.message, success: false };
   }
