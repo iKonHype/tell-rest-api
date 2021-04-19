@@ -11,6 +11,7 @@ const User = require("../models/User");
 const Authority = require("../models/Authority");
 const { encrypt, decrypt } = require("../helpers/cipherEngine");
 const otpGen = require("../helpers/generateOTP");
+const got = require("got");
 const {
   signJWT,
   refreshJWT,
@@ -189,7 +190,21 @@ exports.createAuthorityProfile = async (
     result.encry_password = undefined;
     result.salt = undefined;
 
-    //TODO: Send authority created email
+    const { body } = await got.post(
+      "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/send",
+      {
+        json: {
+          userEmail: email,
+          emailSubject: "TELL | Your Authority Account is Now Available",
+          emailBody: `<h3>As per your request, we have created an authority account in the tell - the public complaint management system. Please use the following data as the credentials.</h3><h4>Account Name: ${authorityName}<br/>Username: ${username}<br/>Password: ${password}</h4><h3>Thank you.</h3><h3>Best Regards<br/>Authority Support Team<br/>Tell Inc</h3>`,
+        },
+        responseType: "json",
+      }
+    );
+    console.log("email body", body);
+
+    if (!body.data.success)
+      return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
   } catch (error) {

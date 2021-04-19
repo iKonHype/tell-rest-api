@@ -58,7 +58,7 @@ exports.createNewComplaint = async (
         json: {
           userEmail: saveComplaintsInUser.email,
           emailSubject: "New Complaint Placement Notification",
-          emailBody: `<h1>Hello ${saveComplaintsInUser.firstName}!</h1><h3>We have received your new complaint. We will take neccessary actions as soon as possible</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${result.title}</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer support<br/>Tell Inc</h3>`,
+          emailBody: `<h1>Hello ${saveComplaintsInUser.firstName}!</h1><h3>We have received your new complaint. We will take neccessary actions as soon as possible</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${result.title}</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer Support Team<br/>Tell Inc</h3>`,
         },
         responseType: "json",
       }
@@ -89,7 +89,6 @@ exports.updateComplaintStatus = async (
   reason
 ) => {
   reason = reason ?? "Reason is not defined";
-  console.log("Body got", { userId, complaintId, complaintState, reason });
   try {
     if (complaintState === "closed") {
       const result = await Complaint.findById(complaintId)
@@ -100,7 +99,23 @@ exports.updateComplaintStatus = async (
         });
       if (!result) return { result: null, success: false };
 
-      //TODO: Complaint confirmation email [user action]
+      const { body } = await got.post(
+        "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/complete",
+        {
+          json: {
+            userEmail: result.owner.email,
+            userFirstName: result.owner.firstName,
+            complaintID: result._id,
+            complaintTitle: result.title,
+            link: `https://tell-lk.netlify.app/.netlify/functions/api/complaints/confirm/${result.owner._id}/${result._id}`,
+          },
+          responseType: "json",
+        }
+      );
+      console.log("email body", body);
+
+      if (!body.data.success)
+        return { result, success: true, info: "email not sent" };
 
       return { result, success: true };
     }
@@ -116,7 +131,6 @@ exports.updateComplaintStatus = async (
       .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
 
-    //TODO: Complaint status change email
     const { body } = await got.post(
       "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/send",
       {
@@ -131,7 +145,7 @@ exports.updateComplaintStatus = async (
               : null
           }.</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
             result.title
-          }</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer support<br/>Tell Inc</h3>`,
+          }</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer Support Team<br/>Tell Inc</h3>`,
         },
         responseType: "json",
       }
