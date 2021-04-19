@@ -196,7 +196,7 @@ exports.createAuthorityProfile = async (
         json: {
           userEmail: email,
           emailSubject: "TELL | Your Authority Account is Now Available",
-          emailBody: `<h3>As per your request, we have created an authority account in the tell - the public complaint management system. Please use the following data as the credentials.</h3><h4>Account Name: ${authorityName}<br/>Username: ${username}<br/>Password: ${password}</h4><h3>Thank you.</h3><h3>Best Regards<br/>Authority Support Team<br/>Tell Inc</h3>`,
+          emailBody: `<h2>As per your request, we have created an authority account in the tell - the public complaint management system. Please use the following data as the credentials.</h2><h3>Account Name: ${authorityName}<br/>Username: ${username}<br/>Password: ${password}</h3><h3>Thank you.</h3><h4>Best Regards<br/>Authority Support Team<br/>Tell Inc</h4>`,
         },
         responseType: "json",
       }

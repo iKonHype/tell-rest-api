@@ -57,8 +57,8 @@ exports.createNewComplaint = async (
       {
         json: {
           userEmail: saveComplaintsInUser.email,
-          emailSubject: "New Complaint Placement Notification",
-          emailBody: `<h1>Hello ${saveComplaintsInUser.firstName}!</h1><h3>We have received your new complaint. We will take neccessary actions as soon as possible</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${result.title}</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer Support Team<br/>Tell Inc</h3>`,
+          emailSubject: "TELL | New Complaint Placement Notification",
+          emailBody: `<h1>Hello ${saveComplaintsInUser.firstName}!</h1><h2>We have recorded your complaint and will take neccessary actions as soon as possible</h2><h3>Complaint Title: ${result.title}<br/>Complaint Id: tell-${result._id}</h3><h3>Thank you.</h3><h4>Best Regards<br/>Customer Support Team<br/>Tell Inc</h4>`,
         },
         responseType: "json",
       }
@@ -136,16 +136,16 @@ exports.updateComplaintStatus = async (
       {
         json: {
           userEmail: result.owner.email,
-          emailSubject: "New Complaint Placement Notification",
-          emailBody: `<h1>Hello ${result.owner.firstName}!</h1><h3>${
+          emailSubject: "TELL | Complaint Status Change Notification",
+          emailBody: `<h1>Hello ${result.owner.firstName}!</h1><h2>${
             result.authority.authorityName
-          } mark your complaint as ${result.status} ${
+          } has mark your complaint as ${result.status.toUpperCase()} ${
             result.status === "rejected"
               ? `mentioning the reason as "${result.reason}"`
               : ""
-          }.</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
+          }.</h2><h3>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
             result.title
-          }</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer Support Team<br/>Tell Inc</h3>`,
+          }</h3><h3>Thank you.</h3><h4>Best Regards<br/>Customer Support Team<br/>Tell Inc</h4>`,
         },
         responseType: "json",
       }
