@@ -137,7 +137,7 @@ exports.updateComplaintStatus = async (
           emailBody: `<h1>Hello ${result.owner.firstName}!</h1><h2>${
             result.authority.authorityName
           } has mark your complaint as ${result.status.toUpperCase()} ${
-            result.status === "rejected"
+            result.status === "rejected" && reson
               ? `mentioning the reason as "${reason}"`
               : ""
           }.</h2><h3>Complaint Title: ${result.title}<br/>Complaint Id: tell-${
