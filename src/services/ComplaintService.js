@@ -142,7 +142,7 @@ exports.updateComplaintStatus = async (
           } mark your complaint as ${result.status} ${
             result.status === "rejected"
               ? `mentioning the reason as "${result.reason}"`
-              : null
+              : ""
           }.</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
             result.title
           }</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer Support Team<br/>Tell Inc</h3>`,
