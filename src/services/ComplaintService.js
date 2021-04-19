@@ -7,6 +7,7 @@ const Complaint = require("../models/Complaint");
 const User = require("../models/User");
 const Authority = require("../models/Authority");
 const Category = require("../models/Category");
+const got = require("got");
 
 /**
  * Create a new complaint [User]
@@ -48,11 +49,24 @@ exports.createNewComplaint = async (
       userId,
       { $push: { complaints: result._id } },
       { new: true }
-    );
+    ).select("email firstName");
     if (!saveComplaintsInUser) return { result: null, success: false };
 
-    //TODO: Send complaint placement email
-    //TODO: Send complaint placement sms
+    const { body } = await got.post(
+      "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/send",
+      {
+        json: {
+          userEmail: saveComplaintsInUser.email,
+          emailSubject: "New Complaint Placement Notification",
+          emailBody: `<h1>Hello ${saveComplaintsInUser.firstName}!</h1><h3>We have received your new complaint. We will take neccessary actions as soon as possible</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${result.title}</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer support<br/>Tell Inc</h3>`,
+        },
+        responseType: "json",
+      }
+    );
+    console.log("email body", body);
+
+    if (!body.data.success)
+      return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
   } catch (error) {
@@ -87,7 +101,6 @@ exports.updateComplaintStatus = async (
       if (!result) return { result: null, success: false };
 
       //TODO: Complaint confirmation email [user action]
-      //TODO: Complaint confirmation sms [user action]
 
       return { result, success: true };
     }
@@ -98,11 +111,35 @@ exports.updateComplaintStatus = async (
         $set: { status: complaintState },
       },
       { new: true }
-    ).populate({ path: "owner", select: "email contact firstName" });
+    )
+      .populate({ path: "owner", select: "email contact firstName" })
+      .populate({ path: "authority", select: "authorityName" });
     if (!result) return { result, success: false };
 
     //TODO: Complaint status change email
-    //TODO: Complaint status change sms
+    const { body } = await got.post(
+      "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/send",
+      {
+        json: {
+          userEmail: result.owner.email,
+          emailSubject: "New Complaint Placement Notification",
+          emailBody: `<h1>Hello ${result.owner.firstName}!</h1><h3>${
+            result.authority.authorityName
+          } mark your complaint as ${result.status} ${
+            result.status === "rejected"
+              ? `mentioning the reason as "${result.reason}"`
+              : null
+          }.</h3><h2>Complaint Id: tell-${result._id}<br/>Complaint Title: ${
+            result.title
+          }</h2><h3>Thank you.</h3><h3>Best Regards<br/>Customer support<br/>Tell Inc</h3>`,
+        },
+        responseType: "json",
+      }
+    );
+    console.log("email body", body);
+
+    if (!body.data.success)
+      return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
   } catch (error) {
