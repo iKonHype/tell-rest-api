@@ -64,7 +64,7 @@ exports.createNewComplaint = async (
       }
     );
 
-    if (!body.data.success)
+    if (!body)
       return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
@@ -111,8 +111,7 @@ exports.updateComplaintStatus = async (
         }
       );
 
-      if (!body.data.success)
-        return { result, success: true, info: "email not sent" };
+      if (!body) return { result, success: true, info: "email not sent" };
 
       return { result, success: true };
     }
@@ -137,7 +136,7 @@ exports.updateComplaintStatus = async (
           emailBody: `<h1>Hello ${result.owner.firstName}!</h1><h2>${
             result.authority.authorityName
           } has mark your complaint as ${result.status.toUpperCase()} ${
-            result.status === "rejected" && reson
+            result.status === "rejected" && reson && reason !== "None"
               ? `mentioning the reason as "${reason}"`
               : ""
           }.</h2><h3>Complaint Title: ${result.title}<br/>Complaint Id: tell-${
@@ -148,8 +147,7 @@ exports.updateComplaintStatus = async (
       }
     );
 
-    if (!body.data.success)
-      return { result, success: true, info: "email not sent" };
+    if (!body) return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
   } catch (error) {

@@ -49,8 +49,24 @@ exports.signup = async (payload) => {
   const otp = otpGen();
 
   try {
-    //TODO: send otp code in the email
-    //TODO: send otp code in the sms
+    const { body } = await got.post(
+      "https://us-central1-sewa-5df00.cloudfunctions.net/app/email/send",
+      {
+        json: {
+          userEmail: email,
+          emailSubject: "TELL | OTP Code for Account Activation",
+          emailBody: `<h2>As per your request, we have created a tempory account for you. Please activate it using the following data OTP code.</h2><h3>OTP: tell-${otp}</h3><h3>Thank you.</h3><h4>Best Regards<br/>Customer Support Team<br/>Tell Inc</h4>`,
+        },
+        responseType: "json",
+      }
+    );
+
+    if (!body)
+      return {
+        result: { otp, signupToken },
+        success: true,
+        info: "email not sent",
+      };
 
     return { result: { otp, signupToken }, success: true };
   } catch (error) {
@@ -202,8 +218,7 @@ exports.createAuthorityProfile = async (
       }
     );
 
-    if (!body.data.success)
-      return { result, success: true, info: "email not sent" };
+    if (!body) return { result, success: true, info: "email not sent" };
 
     return { result, success: true };
   } catch (error) {
